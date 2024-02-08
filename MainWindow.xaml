@@ -1,0 +1,92 @@
+﻿<Window x:Class="JobTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JobTracker"
+        mc:Ignorable="d"
+        Title="Job Tracker" Height="550" Width="600" MinHeight="550" MinWidth="600">
+    <Grid Background="HotPink">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Margin="10">
+            <Label>Jobs</Label>
+            <ListBox>
+                <ListBoxItem>Job 1</ListBoxItem>
+                <ListBoxItem>Job 2</ListBoxItem>
+                <ListBoxItem>Job 3</ListBoxItem>
+                <ListBoxItem>Job 4</ListBoxItem>
+                <ListBoxItem>Job 5</ListBoxItem>
+            </ListBox>
+        </StackPanel>
+
+        <!--This is where the info about the job lives-->
+        <Grid Grid.Column="1" Margin="10" Background="CornflowerBlue">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="compoundTitle" FontSize="14">Company - Job</Label>
+
+            <StackPanel Grid.Row="1">
+                <Label>Job Title</Label>
+                <TextBox x:Name="jobTitle" TextChanged="jobTitle_TextChanged">Job</TextBox>
+                <Label>URL of Listing</Label>
+                <TextBox>URL</TextBox>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="1">
+                <Label>Company Name</Label>
+                <TextBox x:Name="companyName" TextChanged="companyName_TextChanged">Company</TextBox>
+            </StackPanel>
+            <StackPanel Grid.Row="2">
+                <Label>Status</Label>
+                <StackPanel>
+                    <CheckBox IsChecked="True">Found</CheckBox>
+                    <CheckBox>Researched</CheckBox>
+                    <CheckBox>Cover Letter Written</CheckBox>
+                    <CheckBox>Resume Written</CheckBox>
+                    <CheckBox>Applied</CheckBox>
+                    <CheckBox>Interviewing</CheckBox>
+                </StackPanel>
+                <Label>Final Status</Label>
+                <WrapPanel>
+                    <CheckBox>Accepted</CheckBox>
+                    <CheckBox>Rejected</CheckBox>
+                </WrapPanel>
+
+                <Label>Contact</Label>
+                <TextBox>Contact Name and Info</TextBox>
+
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Grid.Row="2">
+                <Label>Date Located</Label>
+                <DatePicker></DatePicker>
+                <Label>Date Materials Finished</Label>
+                <DatePicker></DatePicker>
+                <Label>Date Applied</Label>
+                <DatePicker></DatePicker>
+                <Label>Date Next Steps</Label>
+                <DatePicker></DatePicker>
+            </StackPanel>
+            <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
+                <Label>Notes:</Label>
+                <TextBox VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" Height="54" ScrollViewer.CanContentScroll="True"/>
+                <Button x:Name="BtnSave" HorizontalContentAlignment="Center" Margin="0,5,0,0" MaxWidth="50" Content="Save" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="BtnSave_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

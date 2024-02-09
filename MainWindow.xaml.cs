@@ -84,12 +84,9 @@ namespace JobTracker
         {
             JobInfo jobInfo = new JobInfo();
 
-            if (compoundTitle != null)
-            {
-                jobInfo.compoundTitle = compoundTitle.Content.ToString() ?? string.Format("{0} - {1}", companyName.Text, jobTitle.Text); ;
-            }
             jobInfo.jobTitle = jobTitle.Text;
             jobInfo.companyName = companyName.Text;
+            JobInfo.UpdateCompoundTitle(jobTitle.Text, companyName.Text, jobInfo);
             jobInfo.URL = URL.Text;
 
             jobInfo.found = found.IsChecked ?? false;
@@ -140,8 +137,7 @@ namespace JobTracker
         {
             if (companyName != null && jobTitle != null)
             {
-                string currentTitle = string.Format("{0} - {1}", companyName.Text, jobTitle.Text);
-                compoundTitle.Content = currentTitle;
+                compoundTitle.Content = JobInfo.UpdateCompoundTitle(jobTitle.Text, companyName.Text);
             }
         }
 

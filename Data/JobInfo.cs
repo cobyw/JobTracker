@@ -75,19 +75,19 @@ namespace JobTracker.Data
         {
             get; set;
         }
-        public DateTime dateLocated
+        public DateTime? dateLocated
         {
             get; set;
         }
-        public DateTime dateMaterialsFinished
+        public DateTime? dateMaterialsFinished
         {
             get; set;
         }
-        public DateTime dateApplied
+        public DateTime? dateApplied
         {
             get; set;
         }
-        public DateTime dateNextSteps
+        public DateTime? dateNextSteps
         {
             get; set;
         }
@@ -111,11 +111,6 @@ namespace JobTracker.Data
 
             contactInfo = "Contact name and info";
             notes = string.Empty;
-
-            dateLocated = DateTime.Now;
-            dateMaterialsFinished = DateTime.Now;
-            dateApplied = DateTime.Now;
-            dateNextSteps = DateTime.Now;
         }
     }
 }

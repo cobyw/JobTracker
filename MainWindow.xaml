@@ -75,6 +75,7 @@
             <!--Right Side Second Row (Status and Dates)-->
             <StackPanel Grid.Row="3">
                 
+                <!--Checkboxes & Contact info on left side-->
                 <Label Content="Status"/>
                 <StackPanel>
                     <CheckBox x:Name="found" IsChecked="True" Content="Found"/>
@@ -96,16 +97,21 @@
 
             </StackPanel>
 
+            <!--Dates on right side-->
+            <!---Dates have to have this fun specific binding formatting because of a known issue
+            where they don't update & redraw correctly-->
             <StackPanel x:Name="stackPanelDate" Grid.Column="1" Grid.Row="3">
                 <Label Content="Date Located"/>
-                <DatePicker x:Name="dateLocated"/>
+                <DatePicker x:Name="dateLocated" GotFocus="DatePicker_GotFocus"/>
                 <Label Content="Date Materials Finished"/>
-                <DatePicker x:Name="dateMaterialsFinished"/>
+                <DatePicker x:Name="dateMaterialsFinished" GotFocus="DatePicker_GotFocus"/>
                 <Label Content="Date Applied"/>
-                <DatePicker x:Name="dateApplied"/>
+                <DatePicker x:Name="dateApplied" GotFocus="DatePicker_GotFocus"/>
                 <Label Content="Date Next Steps"/>
-                <DatePicker x:Name="dateNextSteps"/>
+                <DatePicker x:Name="dateNextSteps" GotFocus="DatePicker_GotFocus"/>
             </StackPanel>
+            
+            <!-- Notes -->
             <DockPanel Grid.Row="4" Grid.ColumnSpan="2">
                 <Label DockPanel.Dock="Top" Content="Notes:"/>
                 <TextBox Margin="5,0,5,5" x:Name="notes"  VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"/>

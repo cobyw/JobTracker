@@ -15,6 +15,8 @@ using System.IO;
 using System.Xml.Serialization;
 using JobTracker.Utilities;
 using System.Xml.Linq;
+using System.Diagnostics;
+using System.Windows.Controls.Primitives;
 
 namespace JobTracker
 {
@@ -60,10 +62,15 @@ namespace JobTracker
                 accepted.IsChecked = ((JobInfo)jobList.Items[index]).accepted;
                 rejected.IsChecked = ((JobInfo)jobList.Items[index]).rejected;
 
-                dateLocated.DisplayDate = ((JobInfo)jobList.Items[index]).dateLocated;
-                dateMaterialsFinished.DisplayDate = ((JobInfo)jobList.Items[index]).dateMaterialsFinished;
-                dateApplied.DisplayDate = ((JobInfo)jobList.Items[index]).dateApplied;
-                dateNextSteps.DisplayDate = ((JobInfo)jobList.Items[index]).dateNextSteps;
+                dateLocated.SelectedDate = ((JobInfo)jobList.Items[index]).dateLocated;
+                dateMaterialsFinished.SelectedDate = ((JobInfo)jobList.Items[index]).dateMaterialsFinished;
+                dateApplied.SelectedDate = ((JobInfo)jobList.Items[index]).dateApplied;
+                dateNextSteps.SelectedDate = ((JobInfo)jobList.Items[index]).dateNextSteps;
+
+                dateLocated.UpdateLayout();
+                dateMaterialsFinished.UpdateLayout();
+                dateApplied.UpdateLayout();
+                dateNextSteps.UpdateLayout();
 
                 contactInfo.Text = ((JobInfo)jobList.Items[index]).contactInfo;
                 notes.Text = ((JobInfo)jobList.Items[index]).notes;
@@ -95,10 +102,10 @@ namespace JobTracker
             jobInfo.accepted = accepted.IsChecked ?? false;
             jobInfo.rejected = rejected.IsChecked ?? false;
 
-            jobInfo.dateLocated = dateLocated.SelectedDate ?? DateTime.Now;
-            jobInfo.dateMaterialsFinished = dateMaterialsFinished.SelectedDate ?? DateTime.Now;
-            jobInfo.dateApplied = dateApplied.SelectedDate ?? DateTime.Now;
-            jobInfo.dateNextSteps = dateNextSteps.SelectedDate ?? DateTime.Now;
+            jobInfo.dateLocated = dateLocated.SelectedDate ?? null;
+            jobInfo.dateMaterialsFinished = dateMaterialsFinished.SelectedDate ?? null;
+            jobInfo.dateApplied = dateApplied.SelectedDate ?? null;
+            jobInfo.dateNextSteps = dateNextSteps.SelectedDate ?? null;
 
             jobInfo.contactInfo = contactInfo.Text;
             jobInfo.notes = notes.Text;
@@ -122,6 +129,7 @@ namespace JobTracker
                 companyName.Text = string.Empty;
             }
         }
+
 
         /// <summary>
         /// Called when the user updates the job name or company name fields
@@ -219,6 +227,14 @@ namespace JobTracker
                 }
 
                 LoadJobData(currentSelectionIndex);
+            }
+        }
+
+        private void DatePicker_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (((DatePicker)sender).SelectedDate == DateTime.MinValue || ((DatePicker)sender).SelectedDate == null)
+            {
+                ((DatePicker)sender).SelectedDate = DateTime.Now;
             }
         }
     }

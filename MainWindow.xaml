@@ -13,27 +13,32 @@
     <Grid Background="HotPink">
         <Grid.RowDefinitions>
             <RowDefinition/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Margin="10">
-            <Label Content="Jobs"/>
-            <ListBox x:Name="jobList" SelectionChanged="jobList_SelectionChanged">
-                
-            </ListBox>
+        <DockPanel Margin="10">
+            <Label DockPanel.Dock="Top" Content="Jobs"/>
+            <ListBox x:Name="jobList" SelectionChanged="jobList_SelectionChanged" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True"/>
+        </DockPanel>
+        <StackPanel VerticalAlignment="Bottom" Grid.Row="1">
+            <Viewbox>
+                <Calendar x:Name="calendar" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+            </Viewbox>
+            <WrapPanel  HorizontalAlignment="Right" Margin="10">
+                <Button x:Name="BtnLoad" Width="50" Click="BtnLoad_Click" Content="Load" Margin="0,0,5,0"/>
+                <Button x:Name="BtnSave" Width="50" Click="BtnSave_Click" Content="Save" Margin="0,0,5,0"/>
+                <Button x:Name="BtnAddJob" Width="50" Click="BtnAddJob_Click" Content="Add Job"/>
+            </WrapPanel>
         </StackPanel>
-        <WrapPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10">
-            <Button x:Name="BtnLoad" Width="50" Click="BtnLoad_Click" Content="Load" Margin="0,0,5,0"/>
-            <Button x:Name="BtnSave" Width="50" Click="BtnSave_Click" Content="Save" Margin="0,0,5,0"/>
-            <Button x:Name="BtnAddJob" Width="50" Click="BtnAddJob_Click" Content="Add Job"/>
-        </WrapPanel>
+
         
 
         <!--This is where the info about the job lives-->
-        <Grid Grid.Column="1" Margin="10" Background="CornflowerBlue">
+        <Grid Grid.Column="1" Grid.RowSpan="2" Margin="10" Background="CornflowerBlue">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -78,7 +83,7 @@
 
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Grid.Row="2">
+            <StackPanel x:Name="stackPanelDate" Grid.Column="1" Grid.Row="2">
                 <Label Content="Date Located"/>
                 <DatePicker x:Name="dateLocated"/>
                 <Label Content="Date Materials Finished"/>
@@ -88,10 +93,10 @@
                 <Label Content="Date Next Steps"/>
                 <DatePicker x:Name="dateNextSteps"/>
             </StackPanel>
-            <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
-                <Label Content="Notes:"/>
-                <TextBox x:Name="notes"  VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" Height="54" ScrollViewer.CanContentScroll="True"/>
-            </StackPanel>
+            <DockPanel Grid.Row="3" Grid.ColumnSpan="2">
+                <Label DockPanel.Dock="Top" Content="Notes:"/>
+                <TextBox Margin="5,0,5,5" x:Name="notes"  VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"/>
+            </DockPanel>
         </Grid>
     </Grid>
 </Window>

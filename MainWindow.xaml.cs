@@ -13,6 +13,8 @@ using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
 using System.Xml.Serialization;
+using JobTracker.Utilities;
+using System.Xml.Linq;
 
 namespace JobTracker
 {
@@ -77,7 +79,7 @@ namespace JobTracker
 
             if (compoundTitle != null)
             {
-                jobInfo.compoundTitle = compoundTitle.Content.ToString();
+                jobInfo.compoundTitle = compoundTitle.Content.ToString() ?? string.Format("{0} - {1}", companyName.Text, jobTitle.Text); ;
             }
             jobInfo.jobTitle = jobTitle.Text;
             jobInfo.companyName = companyName.Text;
@@ -104,6 +106,11 @@ namespace JobTracker
             jobList.Items[currentSelectionIndex] = jobInfo;
         }
 
+        /// <summary>
+        /// Called when the user updates the job name or company name fields
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void compound_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateCompoundTitle();
@@ -124,6 +131,8 @@ namespace JobTracker
             jobList.Items.Add(new JobInfo());
             jobList.SelectedIndex = jobList.Items.Count - 1;
         }
+
+        //TOOD - Add a way to remove jobs and a confirmation box
 
         private void jobList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

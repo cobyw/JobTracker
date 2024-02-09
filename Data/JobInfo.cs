@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Xml.Serialization;
+using System.Windows.Markup;
+using System.Runtime.Serialization;
 
 namespace JobTracker.Data
 {
-
-    public struct JobInfo
+    [Serializable]
+    public class JobInfo
     {
+        public string compoundTitle
+        { get; set; }
+
         //main info
         public string jobTitle
         {
@@ -82,10 +89,11 @@ namespace JobTracker.Data
             get; set;
         }
 
-        public JobInfo(string newJobTitle = "Job")
+        public JobInfo()
         {
-            jobTitle = newJobTitle;
+            jobTitle = "Job";
             companyName = "Company";
+            compoundTitle = string.Format("{0} - {1}", companyName, jobTitle);
             URL = "URL";
 
             found = true;
@@ -101,17 +109,36 @@ namespace JobTracker.Data
             contactInfo = "Contact name and info";
             notes = string.Empty;
 
-            /*
-            dateLocated = DateTime.MinValue;
-            dateMaterialsFinished = DateTime.MinValue;
-            dateApplied = DateTime.MinValue;
-            dateNextSteps = DateTime.MinValue;
-            */
+            dateLocated = DateTime.Now;
+            dateMaterialsFinished = DateTime.Now;
+            dateApplied = DateTime.Now;
+            dateNextSteps = DateTime.Now;
         }
 
-        public override string ToString()
+        public JobInfo(string newJobTitle = "Job")
         {
-            return jobTitle;
+            jobTitle = newJobTitle;
+            companyName = "Company";
+            compoundTitle = string.Format("{0} - {1}", companyName, jobTitle);
+            URL = "URL";
+
+            found = true;
+            researched = false;
+            coverLetter = false;
+            resume = false;
+            applied = false;
+            interviewing = false;
+
+            accepted = false;
+            rejected = false;
+
+            contactInfo = "Contact name and info";
+            notes = string.Empty;
+
+            dateLocated = DateTime.Now;
+            dateMaterialsFinished = DateTime.Now;
+            dateApplied = DateTime.Now;
+            dateNextSteps = DateTime.Now;
         }
     }
 }

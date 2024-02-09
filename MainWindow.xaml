@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:JobTracker"
         xmlns:Data="clr-namespace:JobTracker.Data" x:Class="JobTracker.MainWindow"
         mc:Ignorable="d"
-        Title="Job Tracker" Height="550" Width="600" MinHeight="550" MinWidth="600">
+        Title="Job Tracker" Height="550" Width="600" MinHeight="550" MinWidth="600"
+        Closing="Window_Closing">
+    
+
     <Grid Background="HotPink">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -22,7 +25,12 @@
                 
             </ListBox>
         </StackPanel>
-        <Button x:Name="BtnAddJob" Width="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10" Click="BtnAddJob_Click" Content="Add Job"/>
+        <WrapPanel VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="BtnLoad" Width="50" Click="BtnLoad_Click" Content="Load" Margin="0,0,5,0"/>
+            <Button x:Name="BtnSave" Width="50" Click="BtnSave_Click" Content="Save" Margin="0,0,5,0"/>
+            <Button x:Name="BtnAddJob" Width="50" Click="BtnAddJob_Click" Content="Add Job"/>
+        </WrapPanel>
+        
 
         <!--This is where the info about the job lives-->
         <Grid Grid.Column="1" Margin="10" Background="CornflowerBlue">
@@ -37,52 +45,52 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label x:Name="compoundTitle" FontSize="14" Content="Company - Job"/>
+            <Label x:Name="compoundTitle" FontSize="14" Content="Company - Job" Grid.ColumnSpan="2"/>
 
             <StackPanel Grid.Row="1">
                 <Label Content="Job Title"/>
-                <TextBox x:Name="jobTitle" TextChanged="jobTitle_TextChanged" Text="Job"/>
+                <TextBox x:Name="jobTitle" TextChanged="compound_TextChanged" Text="Job" LostKeyboardFocus="compound_LostKeyboardFocus"/>
                 <Label Content="URL of Listing"/>
-                <TextBox Text="URL"/>
+                <TextBox x:Name="URL" Text="URL"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="1">
                 <Label Content="Company Name"/>
-                <TextBox x:Name="companyName" TextChanged="companyName_TextChanged" Text="Company"/>
+                <TextBox x:Name="companyName" TextChanged="compound_TextChanged" Text="Company" LostKeyboardFocus="compound_LostKeyboardFocus" />
             </StackPanel>
             <StackPanel Grid.Row="2">
                 <Label Content="Status"/>
                 <StackPanel>
-                    <CheckBox IsChecked="True" Content="Found"/>
-                    <CheckBox Content="Researched"/>
-                    <CheckBox Content="Cover Letter Written"/>
-                    <CheckBox Content="Resume Written"/>
-                    <CheckBox Content="Applied"/>
-                    <CheckBox Content="Interviewing"/>
+                    <CheckBox x:Name="found" IsChecked="True" Content="Found"/>
+                    <CheckBox x:Name="researched" Content="Researched"/>
+                    <CheckBox x:Name="coverLetter" Content="Cover Letter Written"/>
+                    <CheckBox x:Name="resume" Content="Resume Written"/>
+                    <CheckBox x:Name="applied" Content="Applied"/>
+                    <CheckBox x:Name="interviewing" Content="Interviewing"/>
                 </StackPanel>
                 <Label Content="Final Status"/>
                 <WrapPanel>
-                    <CheckBox Content="Accepted"/>
-                    <CheckBox Content="Rejected"/>
+                    <CheckBox x:Name="accepted" Content="Accepted"/>
+                    <CheckBox x:Name="rejected" Content="Rejected"/>
                 </WrapPanel>
 
                 <Label Content="Contact"/>
-                <TextBox Text="Contact Name and Info"/>
+                <TextBox x:Name="contactInfo" Text="Contact Name and Info"/>
 
             </StackPanel>
 
             <StackPanel Grid.Column="1" Grid.Row="2">
                 <Label Content="Date Located"/>
-                <DatePicker/>
+                <DatePicker x:Name="dateLocated"/>
                 <Label Content="Date Materials Finished"/>
-                <DatePicker/>
+                <DatePicker x:Name="dateMaterialsFinished"/>
                 <Label Content="Date Applied"/>
-                <DatePicker/>
+                <DatePicker x:Name="dateApplied"/>
                 <Label Content="Date Next Steps"/>
-                <DatePicker/>
+                <DatePicker x:Name="dateNextSteps"/>
             </StackPanel>
             <StackPanel Grid.Row="3" Grid.ColumnSpan="2">
                 <Label Content="Notes:"/>
-                <TextBox VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" Height="54" ScrollViewer.CanContentScroll="True"/>
+                <TextBox x:Name="notes"  VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" Height="54" ScrollViewer.CanContentScroll="True"/>
             </StackPanel>
         </Grid>
     </Grid>

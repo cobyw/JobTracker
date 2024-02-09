@@ -58,12 +58,12 @@
             
             <StackPanel Grid.Row="1">
                 <Label Content="Company Name"/>
-                <TextBox x:Name="companyName" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="compound_LostKeyboardFocus" GotKeyboardFocus="compund_GotKeyboardFocus"/>
+                <TextBox x:Name="companyName" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="JobCompany_LostKeyboardFocus" GotKeyboardFocus="JobCompany_GotKeyboardFocus"/>
             </StackPanel>
             
             <StackPanel Grid.Row="1" Grid.Column="1" >
                 <Label Content="Job Title"/>
-                <TextBox x:Name="jobTitle" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="compound_LostKeyboardFocus" GotKeyboardFocus="compund_GotKeyboardFocus"/>
+                <TextBox x:Name="jobTitle" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="JobCompany_LostKeyboardFocus" GotKeyboardFocus="JobCompany_GotKeyboardFocus"/>
             </StackPanel>
 
             <!--Right Side Second Row (URL)-->
@@ -78,18 +78,18 @@
                 <!--Checkboxes & Contact info on left side-->
                 <Label Content="Status"/>
                 <StackPanel>
-                    <CheckBox x:Name="found" IsChecked="True" Content="Found"/>
-                    <CheckBox x:Name="researched" Content="Researched"/>
-                    <CheckBox x:Name="coverLetter" Content="Cover Letter Written"/>
-                    <CheckBox x:Name="resume" Content="Resume Written"/>
-                    <CheckBox x:Name="applied" Content="Applied"/>
-                    <CheckBox x:Name="interviewing" Content="Interviewing"/>
+                    <CheckBox x:Name="found" IsChecked="True" Content="Found" Click="statusCheckBox_Click"/>
+                    <CheckBox x:Name="researched" Content="Researched" Click="statusCheckBox_Click"/>
+                    <CheckBox x:Name="coverLetter" Content="Cover Letter Written" Click="statusCheckBox_Click"/>
+                    <CheckBox x:Name="resume" Content="Resume Written" Click="statusCheckBox_Click"/>
+                    <CheckBox x:Name="applied" Content="Applied" Click="statusCheckBox_Click"/>
+                    <CheckBox x:Name="interviewing" Content="Interviewing" Click="statusCheckBox_Click"/>
                 </StackPanel>
                 
                 <Label Content="Final Status"/>
                 <WrapPanel>
-                    <CheckBox x:Name="accepted" Content="Accepted"/>
-                    <CheckBox x:Name="rejected" Content="Rejected"/>
+                    <CheckBox x:Name="accepted" Content="Accepted" Click="statusCheckBox_Click"/>
+                    <CheckBox x:Name="rejected" Content="Rejected" Click="statusCheckBox_Click"/>
                 </WrapPanel>
 
                 <Label Content="Contact"/>

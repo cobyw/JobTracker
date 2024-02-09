@@ -8,6 +8,9 @@ using System.Xml.Serialization;
 using System.Windows.Markup;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using System.Windows.Controls;
+using static JobTracker.Data.JobInfo;
+
 
 namespace JobTracker.Data
 {
@@ -25,10 +28,11 @@ namespace JobTracker.Data
             Interviewing, //3
             Accepted, //4
             Rejected //5
-        } 
+        }
 
-        public Status status { get; private set; }
-        public string compoundTitle { get; private set; }
+
+        public Status status { get; set; }
+        public string compoundTitle { get; set; }
         //main info
         public string jobTitle { get; set; }
         public string companyName { get; set; }
@@ -52,10 +56,8 @@ namespace JobTracker.Data
 
         public JobInfo()
         {
-            UpdateStatus();
             jobTitle = c_JOBTITLE;
             companyName = c_COMPANY;
-            UpdateCompoundTitle (jobTitle, companyName, this);
 
             URL = "";
 
@@ -69,30 +71,45 @@ namespace JobTracker.Data
             accepted = false;
             rejected = false;
 
+            status = GetStatus(accepted, rejected, interviewing, applied, researched, coverLetter, resume);
+
+            compoundTitle = GetCompoundTitle(companyName:companyName, jobTitle:jobTitle, status: status);
+
             contactInfo = "";
             notes = string.Empty;
         }
 
-        public static string UpdateCompoundTitle(string jobTitle, string companyName, JobInfo jobInfo = null)
+        public static string GetCompoundTitle(string companyName, string jobTitle, Status status)
         {
-            var newTitle = string.Format("{0} - {1}", companyName, jobTitle);
-
-            if (jobInfo != null)
-            {
-                jobInfo.compoundTitle = newTitle;
-            }
-
-            return newTitle;
+            return string.Format("{0} - {1} - {2}", companyName, jobTitle, GetStatusString(status));
         }
 
-        public void UpdateStatus()
+        static public Status GetStatus(bool accepted, bool rejected, bool interviewing, bool applied, bool researched, bool coverLetter, bool resume)
         {
+            var status = new Status();
             if (accepted) { status = Status.Accepted; }
             else if (rejected) { status = Status.Rejected; }
             else if (interviewing) { status = Status.Interviewing; }
             else if (applied) { status = Status.Applied; }
-            else if (researched) {status = Status.WorkingOnMaterials; }
-            else {status = Status.Reasearching; }
+            else if (researched || coverLetter || resume) { status = Status.WorkingOnMaterials; }
+            else { status = Status.Reasearching; }
+
+            return status;
+        }
+
+        static private string GetStatusString(Status status)
+        {
+            var statusDictionary = new Dictionary<Status, string>()
+            {
+            {Status.Reasearching, "Researching" },
+            {Status.WorkingOnMaterials, "Working On Materials" },
+            {Status.Applied, "Applied" },
+            {Status.Interviewing, "Interviewing" },
+            {Status.Rejected, "Rejected" },
+            {Status.Accepted, "Accepted" },
+            };
+
+            return statusDictionary[status];
         }
     }
 }

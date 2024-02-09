@@ -72,6 +72,8 @@ namespace JobTracker
                 dateApplied.UpdateLayout();
                 dateNextSteps.UpdateLayout();
 
+                compoundTitle.Content = ((JobInfo)jobList.Items[index]).compoundTitle;
+
                 contactInfo.Text = ((JobInfo)jobList.Items[index]).contactInfo;
                 notes.Text = ((JobInfo)jobList.Items[index]).notes;
             }
@@ -86,7 +88,6 @@ namespace JobTracker
 
             jobInfo.jobTitle = jobTitle.Text;
             jobInfo.companyName = companyName.Text;
-            JobInfo.UpdateCompoundTitle(jobTitle.Text, companyName.Text, jobInfo);
             jobInfo.URL = URL.Text;
 
             jobInfo.found = found.IsChecked ?? false;
@@ -107,6 +108,12 @@ namespace JobTracker
             jobInfo.contactInfo = contactInfo.Text;
             jobInfo.notes = notes.Text;
 
+            jobInfo.status = JobInfo.GetStatus(accepted: accepted.IsChecked ?? false,
+                    rejected: rejected.IsChecked ?? false, interviewing: interviewing.IsChecked ?? false,
+                    applied: applied.IsChecked ?? false, researched: researched.IsChecked ?? false,
+                    coverLetter: coverLetter.IsChecked ?? false, resume: resume.IsChecked ?? false);
+            jobInfo.compoundTitle = JobInfo.GetCompoundTitle(companyName: jobInfo.companyName, jobTitle: jobInfo.jobTitle, status:jobInfo.status);
+
             jobList.Items[currentSelectionIndex] = jobInfo;
         }
 
@@ -115,7 +122,7 @@ namespace JobTracker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void compund_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void JobCompany_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (sender == jobTitle && jobTitle.Text == JobInfo.c_JOBTITLE)
             {
@@ -135,10 +142,7 @@ namespace JobTracker
         /// <param name="e"></param>
         private void JobCompany_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (companyName != null && jobTitle != null)
-            {
-                compoundTitle.Content = JobInfo.UpdateCompoundTitle(jobTitle.Text, companyName.Text);
-            }
+            UpdateCompoundTitle();
         }
 
         /// <summary>
@@ -147,7 +151,7 @@ namespace JobTracker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void compound_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private void JobCompany_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (sender == jobTitle && jobTitle.Text == string.Empty)
             {
@@ -233,5 +237,26 @@ namespace JobTracker
                 ((DatePicker)sender).SelectedDate = DateTime.Now;
             }
         }
+
+        private void statusCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateCompoundTitle();
+            //calling this here because it forces the listbox to refresh the title
+            StoreJobData();
+        }
+
+        private void UpdateCompoundTitle()
+        {
+            if (companyName != null && jobTitle != null)
+            {
+                JobInfo.Status status = JobInfo.GetStatus(accepted: accepted.IsChecked ?? false,
+                    rejected: rejected.IsChecked ?? false, interviewing: interviewing.IsChecked ?? false,
+                    applied: applied.IsChecked ?? false, researched: researched.IsChecked ?? false,
+                    coverLetter: coverLetter.IsChecked ?? false, resume: resume.IsChecked ?? false);
+
+                compoundTitle.Content = JobInfo.GetCompoundTitle(companyName: companyName.Text, jobTitle: jobTitle.Text, status);
+            }
+        }
+
     }
 }

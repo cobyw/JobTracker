@@ -13,6 +13,9 @@ namespace JobTracker.Data
     [Serializable]
     public class JobInfo
     {
+        public const string c_JOBTITLE = "Job";
+        public const string c_COMPANY = "Company";
+
         public string compoundTitle
         { get; set; }
 
@@ -91,34 +94,8 @@ namespace JobTracker.Data
 
         public JobInfo()
         {
-            jobTitle = "Job";
-            companyName = "Company";
-            compoundTitle = string.Format("{0} - {1}", companyName, jobTitle);
-            URL = "URL";
-
-            found = true;
-            researched = false;
-            coverLetter = false;
-            resume = false;
-            applied = false;
-            interviewing = false;
-
-            accepted = false;
-            rejected = false;
-
-            contactInfo = "Contact name and info";
-            notes = string.Empty;
-
-            dateLocated = DateTime.Now;
-            dateMaterialsFinished = DateTime.Now;
-            dateApplied = DateTime.Now;
-            dateNextSteps = DateTime.Now;
-        }
-
-        public JobInfo(string newJobTitle = "Job")
-        {
-            jobTitle = newJobTitle;
-            companyName = "Company";
+            jobTitle = c_JOBTITLE;
+            companyName = c_COMPANY;
             compoundTitle = string.Format("{0} - {1}", companyName, jobTitle);
             URL = "URL";
 

@@ -54,13 +54,13 @@
 
             <StackPanel Grid.Row="1">
                 <Label Content="Job Title"/>
-                <TextBox x:Name="jobTitle" TextChanged="compound_TextChanged" Text="Job" LostKeyboardFocus="compound_LostKeyboardFocus"/>
+                <TextBox x:Name="jobTitle" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="compound_LostKeyboardFocus" GotKeyboardFocus="compund_GotKeyboardFocus"/>
                 <Label Content="URL of Listing"/>
-                <TextBox x:Name="URL" Text="URL"/>
+                <TextBox x:Name="URL"/>
             </StackPanel>
             <StackPanel Grid.Column="1" Grid.Row="1">
                 <Label Content="Company Name"/>
-                <TextBox x:Name="companyName" TextChanged="compound_TextChanged" Text="Company" LostKeyboardFocus="compound_LostKeyboardFocus" />
+                <TextBox x:Name="companyName" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="compound_LostKeyboardFocus" GotKeyboardFocus="compund_GotKeyboardFocus"/>
             </StackPanel>
             <StackPanel Grid.Row="2">
                 <Label Content="Status"/>
@@ -79,7 +79,7 @@
                 </WrapPanel>
 
                 <Label Content="Contact"/>
-                <TextBox x:Name="contactInfo" Text="Contact Name and Info"/>
+                <TextBox x:Name="contactInfo"/>
 
             </StackPanel>
 

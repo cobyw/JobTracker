@@ -107,22 +107,54 @@ namespace JobTracker
         }
 
         /// <summary>
+        /// Called when the user goes into the Job or Company boxes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void compund_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (sender == jobTitle && jobTitle.Text == JobInfo.c_JOBTITLE)
+            {
+                jobTitle.Text = string.Empty;
+            }
+            else if (sender == companyName && companyName.Text == JobInfo.c_COMPANY)
+            {
+                companyName.Text = string.Empty;
+            }
+        }
+
+        /// <summary>
         /// Called when the user updates the job name or company name fields
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void compound_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            UpdateCompoundTitle();
-        }
-
-        private void UpdateCompoundTitle()
+        private void JobCompany_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (companyName != null && jobTitle != null)
             {
                 string currentTitle = string.Format("{0} - {1}", companyName.Text, jobTitle.Text);
                 compoundTitle.Content = currentTitle;
             }
+        }
+
+        /// <summary>
+        /// Called when the user exits either the job or company boxes.
+        /// This is used to ensure the name in the list box is accurate
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void compound_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (sender == jobTitle && jobTitle.Text == string.Empty)
+            {
+                jobTitle.Text = JobInfo.c_JOBTITLE;
+            }
+            else if (sender == companyName && companyName.Text == string.Empty)
+            {
+                companyName.Text = JobInfo.c_COMPANY;
+            }
+
+            StoreJobData();
         }
 
         private void BtnAddJob_Click(object sender, RoutedEventArgs e)
@@ -142,11 +174,6 @@ namespace JobTracker
                 currentSelectionIndex = jobList.SelectedIndex;
                 LoadJobData(jobList.SelectedIndex);
             }
-        }
-
-        private void compound_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            StoreJobData();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -194,6 +221,5 @@ namespace JobTracker
                 LoadJobData(currentSelectionIndex);
             }
         }
-
     }
 }

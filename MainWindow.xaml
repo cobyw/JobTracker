@@ -20,6 +20,7 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
+        <!--This is where the selector list, calendar, and buttons live-->
         <DockPanel Margin="10">
             <Label DockPanel.Dock="Top" Content="Jobs"/>
             <ListBox x:Name="jobList" SelectionChanged="jobList_SelectionChanged" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True"/>
@@ -43,6 +44,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -50,19 +52,29 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label x:Name="compoundTitle" FontSize="14" Content="Company - Job" Grid.ColumnSpan="2"/>
 
+        <!--Right Side Top Row (Label, Company name and Title-->
+            <Label x:Name="compoundTitle" FontSize="14" Content="Company - Job" Grid.ColumnSpan="2"/>
+            
             <StackPanel Grid.Row="1">
-                <Label Content="Job Title"/>
-                <TextBox x:Name="jobTitle" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="compound_LostKeyboardFocus" GotKeyboardFocus="compund_GotKeyboardFocus"/>
-                <Label Content="URL of Listing"/>
-                <TextBox x:Name="URL"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1" Grid.Row="1">
                 <Label Content="Company Name"/>
                 <TextBox x:Name="companyName" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="compound_LostKeyboardFocus" GotKeyboardFocus="compund_GotKeyboardFocus"/>
             </StackPanel>
-            <StackPanel Grid.Row="2">
+            
+            <StackPanel Grid.Row="1" Grid.Column="1" >
+                <Label Content="Job Title"/>
+                <TextBox x:Name="jobTitle" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="compound_LostKeyboardFocus" GotKeyboardFocus="compund_GotKeyboardFocus"/>
+            </StackPanel>
+
+            <!--Right Side Second Row (URL)-->
+            <StackPanel Grid.Row="2" Margin="5,0,5,0">
+                <Label Content="URL of Listing"/>
+                <TextBox x:Name="URL"/>
+            </StackPanel>
+
+            <!--Right Side Second Row (Status and Dates)-->
+            <StackPanel Grid.Row="3">
+                
                 <Label Content="Status"/>
                 <StackPanel>
                     <CheckBox x:Name="found" IsChecked="True" Content="Found"/>
@@ -72,6 +84,7 @@
                     <CheckBox x:Name="applied" Content="Applied"/>
                     <CheckBox x:Name="interviewing" Content="Interviewing"/>
                 </StackPanel>
+                
                 <Label Content="Final Status"/>
                 <WrapPanel>
                     <CheckBox x:Name="accepted" Content="Accepted"/>
@@ -83,7 +96,7 @@
 
             </StackPanel>
 
-            <StackPanel x:Name="stackPanelDate" Grid.Column="1" Grid.Row="2">
+            <StackPanel x:Name="stackPanelDate" Grid.Column="1" Grid.Row="3">
                 <Label Content="Date Located"/>
                 <DatePicker x:Name="dateLocated"/>
                 <Label Content="Date Materials Finished"/>
@@ -93,7 +106,7 @@
                 <Label Content="Date Next Steps"/>
                 <DatePicker x:Name="dateNextSteps"/>
             </StackPanel>
-            <DockPanel Grid.Row="3" Grid.ColumnSpan="2">
+            <DockPanel Grid.Row="4" Grid.ColumnSpan="2">
                 <Label DockPanel.Dock="Top" Content="Notes:"/>
                 <TextBox Margin="5,0,5,5" x:Name="notes"  VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"/>
             </DockPanel>

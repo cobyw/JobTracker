@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Windows.Controls;
 using static JobTracker.Data.JobInfo;
+using System.Data;
 
 
 namespace JobTracker.Data
@@ -110,6 +111,16 @@ namespace JobTracker.Data
             };
 
             return statusDictionary[status];
+        }
+    }
+
+    public class DateInfo
+    {
+        private List<Tuple<DateTime, string>>? changeDates = new List<Tuple<DateTime, string>>();
+
+        public void AddDate(DateTime date, string changeInfo)
+        {
+            changeDates?.Add(Tuple.Create(date, changeInfo));
         }
     }
 }

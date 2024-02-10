@@ -27,6 +27,8 @@ namespace JobTracker
     {
         private int currentSelectionIndex = 0;
         private List<JobInfo> jobs;
+        private DateTime lastSaveTime = DateTime.MinValue;
+        private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
 
         public MainWindow()
         {
@@ -118,7 +120,25 @@ namespace JobTracker
         }
 
         /// <summary>
-        /// Called when the user goes into the Job or Company boxes
+        /// Updates the title at the top of the screen to
+        /// reflect the current status, company title, and job title
+        /// </summary>
+        private void UpdateCompoundTitle()
+        {
+            if (companyName != null && jobTitle != null)
+            {
+                JobInfo.Status status = JobInfo.GetStatus(accepted: accepted.IsChecked ?? false,
+                    rejected: rejected.IsChecked ?? false, interviewing: interviewing.IsChecked ?? false,
+                    applied: applied.IsChecked ?? false, researched: researched.IsChecked ?? false,
+                    coverLetter: coverLetter.IsChecked ?? false, resume: resume.IsChecked ?? false);
+
+                compoundTitle.Content = JobInfo.GetCompoundTitle(companyName: companyName.Text, jobTitle: jobTitle.Text, status);
+            }
+        }
+
+        /// <summary>
+        /// Called when the user goes into the Job or Company boxes.
+        /// Clears out the text box if it has the default string, making it easier to type the desires string
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -137,6 +157,7 @@ namespace JobTracker
 
         /// <summary>
         /// Called when the user updates the job name or company name fields
+        /// Updates the title at the top of the screen as they type
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -147,7 +168,8 @@ namespace JobTracker
 
         /// <summary>
         /// Called when the user exits either the job or company boxes.
-        /// This is used to ensure the name in the list box is accurate
+        /// If the box is blank it fills the default value back in
+        /// It also stores the current information to make sure the name in the list box is accurate
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -165,6 +187,12 @@ namespace JobTracker
             StoreJobData();
         }
 
+        /// <summary>
+        /// Triggers when the user clicks the Add Job Button
+        /// Adds a new job to the list and makes it the selected item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnAddJob_Click(object sender, RoutedEventArgs e)
         {
 
@@ -172,8 +200,15 @@ namespace JobTracker
             jobList.SelectedIndex = jobList.Items.Count - 1;
         }
 
-        //TOOD - Add a way to remove jobs and a confirmation box
+        //TOOD - Add a way to remove jobs and a confirmation box for it
 
+        /// <summary>
+        /// Triggers when the user selects a different job from the list
+        /// Stores the current data to make sure it is persisted.
+        /// Loads the selected data into the UI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void jobList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (currentSelectionIndex != jobList.SelectedIndex && jobList.SelectedIndex != -1)
@@ -186,7 +221,25 @@ namespace JobTracker
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //TODO - Add pop up if they haven't saved recently
+            var timeSinceSave = DateTime.Now.Subtract(lastSaveTime).TotalSeconds;
+            if (timeSinceSave > c_TIMEBETWEENSAVEREMINDERS)
+            {
+                string warningMessage;
+
+                if (timeSinceSave > 60)
+                {
+                    warningMessage = "You haven't saved in over a minute. Are you sure you want to quit without saving?";
+                }
+                else
+                {
+                    warningMessage = string.Format("You haven't saved in {0} seconds. Are you sure you want to quit without saving?", (int)timeSinceSave);
+                }
+
+                if (MessageBox.Show(string.Format(warningMessage, timeSinceSave), "Warning - You haven't saved", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
@@ -208,6 +261,7 @@ namespace JobTracker
             if (dialog.ShowDialog() == true)
             {
                 Tools.WriteToXmlFile<List<JobInfo>>(dialog.FileName, jobs);
+                lastSaveTime = DateTime.Now;
             }
         }
 
@@ -243,19 +297,6 @@ namespace JobTracker
             UpdateCompoundTitle();
             //calling this here because it forces the listbox to refresh the title
             StoreJobData();
-        }
-
-        private void UpdateCompoundTitle()
-        {
-            if (companyName != null && jobTitle != null)
-            {
-                JobInfo.Status status = JobInfo.GetStatus(accepted: accepted.IsChecked ?? false,
-                    rejected: rejected.IsChecked ?? false, interviewing: interviewing.IsChecked ?? false,
-                    applied: applied.IsChecked ?? false, researched: researched.IsChecked ?? false,
-                    coverLetter: coverLetter.IsChecked ?? false, resume: resume.IsChecked ?? false);
-
-                compoundTitle.Content = JobInfo.GetCompoundTitle(companyName: companyName.Text, jobTitle: jobTitle.Text, status);
-            }
         }
 
     }

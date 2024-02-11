@@ -17,6 +17,7 @@ using JobTracker.Utilities;
 using System.Xml.Linq;
 using System.Diagnostics;
 using System.Windows.Controls.Primitives;
+using System.Reflection;
 
 namespace JobTracker
 {
@@ -27,6 +28,8 @@ namespace JobTracker
     {
         private int currentSelectionIndex = 0;
         private List<JobInfo> jobs;
+        DateInfo dateInfo;
+
         private DateTime lastSaveTime = DateTime.MinValue;
         private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
 
@@ -41,6 +44,19 @@ namespace JobTracker
 
             LoadJobData(0);
             jobs = new List<JobInfo>();
+            dateInfo = new DateInfo();
+
+            UpdateCalendar();
+        }
+
+        private void UpdateCalendar()
+        {
+            UpdateJobList();
+
+            foreach (DateTime date in dateInfo.GetDatesOfInterest(jobs))
+            {
+                calendar.SelectedDates.Add(date);
+            }
         }
 
         /// <summary>
@@ -117,6 +133,8 @@ namespace JobTracker
             jobInfo.compoundTitle = JobInfo.GetCompoundTitle(companyName: jobInfo.companyName, jobTitle: jobInfo.jobTitle, status:jobInfo.status);
 
             jobList.Items[currentSelectionIndex] = jobInfo;
+
+            UpdateCalendar();
         }
 
         /// <summary>
@@ -133,6 +151,16 @@ namespace JobTracker
                     coverLetter: coverLetter.IsChecked ?? false, resume: resume.IsChecked ?? false);
 
                 compoundTitle.Content = JobInfo.GetCompoundTitle(companyName: companyName.Text, jobTitle: jobTitle.Text, status);
+            }
+        }
+
+        private void UpdateJobList()
+        {
+            jobs.Clear();
+
+            foreach (JobInfo job in jobList.Items)
+            {
+                jobs.Add(job);
             }
         }
 
@@ -298,6 +326,5 @@ namespace JobTracker
             //calling this here because it forces the listbox to refresh the title
             StoreJobData();
         }
-
     }
 }

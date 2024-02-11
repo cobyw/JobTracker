@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using System.Windows.Controls;
 using static JobTracker.Data.JobInfo;
 using System.Data;
+using static JobTracker.Data.DateInfo.ChangeData;
 
 
 namespace JobTracker.Data
@@ -23,12 +24,13 @@ namespace JobTracker.Data
 
         public enum Status
         { 
-            Reasearching, //0
-            WorkingOnMaterials, //1
-            Applied, //2
-            Interviewing, //3
-            Accepted, //4
-            Rejected //5
+            Empty, //0
+            Reasearching, //1
+            WorkingOnMaterials, //2
+            Applied, //3
+            Interviewing, //4
+            Accepted, //5
+            Rejected //6
         }
 
 
@@ -80,6 +82,13 @@ namespace JobTracker.Data
             notes = string.Empty;
         }
 
+        public static string GetCompoundTitle(JobInfo jobInfo)
+        {
+
+            return string.Format("{0} - {1}", jobInfo.companyName, jobInfo.jobTitle);
+
+        }
+
         public static string GetCompoundTitle(string companyName, string jobTitle, Status status)
         {
             return string.Format("{0} - {1} - {2}", companyName, jobTitle, GetStatusString(status));
@@ -108,6 +117,7 @@ namespace JobTracker.Data
             {Status.Interviewing, "Interviewing" },
             {Status.Rejected, "Rejected" },
             {Status.Accepted, "Accepted" },
+            {Status.Empty, "" },
             };
 
             return statusDictionary[status];
@@ -116,11 +126,122 @@ namespace JobTracker.Data
 
     public class DateInfo
     {
-        private List<Tuple<DateTime, string>>? changeDates = new List<Tuple<DateTime, string>>();
-
-        public void AddDate(DateTime date, string changeInfo)
+        public struct ChangeData
         {
-            changeDates?.Add(Tuple.Create(date, changeInfo));
+            public DateTime ChangeDate { get; }
+            public ChangeType TypeOfChange { get; }
+            public string ChangeJob { get; }
+
+            public ChangeData(DateTime changeDate, ChangeType typeOfChange, string changeJob)
+            {
+                ChangeDate = changeDate;
+                TypeOfChange = typeOfChange;
+                ChangeJob = changeJob;
+            }
+
+            public enum ChangeType
+            {
+                Empty, //0
+                Located, //1
+                MaterialsFinished, //2
+                Applied, //3
+                NextSteps
+            }
+        }
+
+        /// <summary>
+        /// Used to check what was changed vs the date the change occurred
+        /// </summary>
+        private List<ChangeData> changeDatas = new List<ChangeData>();
+        /// <summary>
+        /// Used to fill in the calendar with the highlighted dates
+        /// </summary>
+        private List<DateTime> dateOfInterest = new List<DateTime>();
+
+        private static string GetChangeTypeString(ChangeType changeType)
+        {
+            var changeTypeDictionary = new Dictionary<ChangeType, string>()
+            {
+            {ChangeType.Located, "Located" },
+            {ChangeType.MaterialsFinished, "Materials Finished" },
+            {ChangeType.Applied, "Applied" },
+            {ChangeType.NextSteps, "Next Steps" },
+            {ChangeType.Empty, "" },
+            };
+
+            return changeTypeDictionary[changeType];
+        }
+
+        public List<DateTime> GetDatesOfInterest(List<JobInfo> jobInfos)
+        {
+            UpdateChangeData(jobInfos);
+            UpdateDatesOfInterest();
+
+            return dateOfInterest;
+        }
+
+        private void UpdateChangeData(List<JobInfo> jobInfos)
+        {
+            changeDatas = new List<ChangeData>();
+
+            foreach (JobInfo jobInfo in jobInfos)
+            {
+                if (jobInfo.dateLocated != null)
+                {
+                    changeDatas.Add(new ChangeData(jobInfo.dateLocated ?? DateTime.MinValue,
+                        ChangeType.Located, GetCompoundTitle(jobInfo)));
+                }
+                if (jobInfo.dateMaterialsFinished != null)
+                {
+                    changeDatas.Add(new ChangeData(jobInfo.dateMaterialsFinished ?? DateTime.MinValue,
+                    ChangeType.MaterialsFinished, GetCompoundTitle(jobInfo)));
+                }
+                if (jobInfo.dateApplied != null)
+                {
+                    changeDatas.Add(new ChangeData(jobInfo.dateApplied ?? DateTime.MinValue,
+                    ChangeType.Applied, GetCompoundTitle(jobInfo)));
+                }
+                if (jobInfo.dateNextSteps != null)
+                {
+                    changeDatas.Add(new ChangeData(jobInfo.dateNextSteps ?? DateTime.MinValue,
+                    ChangeType.NextSteps, GetCompoundTitle(jobInfo)));
+                }
+            }
+        }
+
+        private void UpdateDatesOfInterest()
+        {
+            dateOfInterest = new List<DateTime>();
+
+            foreach (ChangeData changeData in changeDatas)
+            {
+                if (!dateOfInterest.Contains(changeData.ChangeDate))
+                {
+                    dateOfInterest.Add(changeData.ChangeDate.Date);
+                }
+            }
+        }
+
+        public string GetUpdatesOnDate(DateTime dateTime)
+        {
+            var retVal = string.Empty;
+
+            foreach (ChangeData changeData in changeDatas)
+            {
+                if (changeData.ChangeDate.Date == dateTime.Date)
+                {
+                    if (retVal == string.Empty)
+                    {
+                        retVal += String.Format("{0} - {1}",changeData.ChangeJob, changeData.TypeOfChange);
+                    }
+                    else
+                    {
+                        retVal += String.Format("\n{0} - {1}", changeData.ChangeJob, changeData.TypeOfChange);
+                    }
+                }
+            }
+
+            return retVal;
         }
     }
 }

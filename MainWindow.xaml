@@ -27,7 +27,8 @@
         </DockPanel>
         <StackPanel VerticalAlignment="Bottom" Grid.Row="1">
             <Viewbox>
-                <Calendar x:Name="calendar" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionMode="MultipleRange" ToolTip="a tooltip" ToolTipService.ShowDuration="15000"/>
+                <Calendar x:Name="calendar" ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                          SelectionMode="MultipleRange" ToolTip="a tooltip" ToolTipService.ShowDuration="15000"/>
             </Viewbox>
             <WrapPanel  HorizontalAlignment="Right" Margin="10">
                 <Button x:Name="BtnLoad" Width="50" Click="BtnLoad_Click" Content="Load" Margin="0,0,5,0"/>

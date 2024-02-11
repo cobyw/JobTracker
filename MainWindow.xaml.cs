@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Reflection;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace JobTracker
 {
@@ -47,8 +48,14 @@ namespace JobTracker
             dateInfo = new DateInfo();
 
             UpdateCalendar();
+            UpdateCalendarInfo(DateTime.Now);
         }
 
+        /// <summary>
+        /// Updates the calendar to mark which dates have information.
+        /// We are using blackout dates instead of selections because they are
+        /// still selectable and remain when the user selects things.
+        /// </summary>
         private void UpdateCalendar()
         {
             UpdateJobList();
@@ -57,6 +64,15 @@ namespace JobTracker
             {
                 calendar.SelectedDates.Add(date);
             }
+        }
+
+        /// <summary>
+        /// Updates the Calendar information box with the information for the selected day
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void UpdateCalendarInfo(DateTime? dateTime)
+        {
+            calendarInfo.Text = dateInfo.GetUpdatesOnDate(dateTime);
         }
 
         /// <summary>
@@ -312,6 +328,13 @@ namespace JobTracker
             }
         }
 
+        /// <summary>
+        /// Called when the user begins to select a date
+        /// Sets the default date to "now" so they see the current month
+        /// in the calendar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DatePicker_GotFocus(object sender, RoutedEventArgs e)
         {
             if (((DatePicker)sender).SelectedDate == DateTime.MinValue || ((DatePicker)sender).SelectedDate == null)
@@ -325,6 +348,12 @@ namespace JobTracker
             UpdateCompoundTitle();
             //calling this here because it forces the listbox to refresh the title
             StoreJobData();
+        }
+
+        private void calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateCalendarInfo(calendar.SelectedDate);
+            UpdateCalendar();
         }
     }
 }

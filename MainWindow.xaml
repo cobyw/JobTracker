@@ -6,38 +6,60 @@
         xmlns:local="clr-namespace:JobTracker"
         xmlns:Data="clr-namespace:JobTracker.Data" x:Class="JobTracker.MainWindow"
         mc:Ignorable="d"
-        Title="Job Tracker" Height="550" Width="600" MinHeight="550" MinWidth="600"
+        Title="Job Tracker" Height="550" Width="800" MinHeight="550" MinWidth="600"
         Closing="Window_Closing">
     
 
     <Grid Background="HotPink">
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1.75*"/>
         </Grid.ColumnDefinitions>
 
         <!--This is where the selector list, calendar, and buttons live-->
-        <DockPanel Margin="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Margin="10">
             <Label DockPanel.Dock="Top" Content="Jobs"/>
-            <ListBox x:Name="jobList" SelectionChanged="jobList_SelectionChanged" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True"/>
+            <ListBox x:Name="jobList" SelectionChanged="jobList_SelectionChanged" HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True"/>
         </DockPanel>
-        <StackPanel VerticalAlignment="Bottom" Grid.Row="1">
-            <Viewbox>
+
+            <Viewbox Grid.Row="1">
                 <Calendar x:Name="calendar" ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                          SelectionMode="MultipleRange" ToolTip="a tooltip" ToolTipService.ShowDuration="15000"/>
+                          ToolTip="Click on a date for more information" SelectedDatesChanged="calendar_SelectedDatesChanged"
+                          SelectionMode="MultipleRange"
+                          >
+                </Calendar>
             </Viewbox>
-            <WrapPanel  HorizontalAlignment="Right" Margin="10">
+            <!-- Calendar Display Information -->
+            <DockPanel Grid.Row="2">
+                <Label DockPanel.Dock="Top" Content="Calendar Info:"/>
+                <TextBox x:Name="calendarInfo"  Margin="10,0,5,5" VerticalScrollBarVisibility="Auto"
+                         SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto"
+                         ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"
+                         IsReadOnly="True" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap"/>
+            </DockPanel>
+
+            <!-- Buttons -->
+            <WrapPanel  HorizontalAlignment="Right" Margin="10" Grid.Row="3" >
                 <Button x:Name="BtnLoad" Width="50" Click="BtnLoad_Click" Content="Load" Margin="0,0,5,0"/>
                 <Button x:Name="BtnSave" Width="50" Click="BtnSave_Click" Content="Save" Margin="0,0,5,0"/>
                 <Button x:Name="BtnAddJob" Width="50" Click="BtnAddJob_Click" Content="Add Job"/>
             </WrapPanel>
-        </StackPanel>
-
-        
+        </Grid>
 
         <!--This is where the info about the job lives-->
         <Grid Grid.Column="1" Grid.RowSpan="2" Margin="10" Background="CornflowerBlue">
@@ -99,8 +121,6 @@
             </StackPanel>
 
             <!--Dates on right side-->
-            <!---Dates have to have this fun specific binding formatting because of a known issue
-            where they don't update & redraw correctly-->
             <StackPanel x:Name="stackPanelDate" Grid.Column="1" Grid.Row="3">
                 <Label Content="Date Located"/>
                 <DatePicker x:Name="dateLocated" GotFocus="DatePicker_GotFocus"/>
@@ -115,7 +135,8 @@
             <!-- Notes -->
             <DockPanel Grid.Row="4" Grid.ColumnSpan="2">
                 <Label DockPanel.Dock="Top" Content="Notes:"/>
-                <TextBox Margin="5,0,5,5" x:Name="notes"  VerticalScrollBarVisibility="Auto" SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"/>
+                <TextBox Margin="5,0,5,5" x:Name="notes"  VerticalScrollBarVisibility="Auto"
+                         SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto" ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"/>
             </DockPanel>
         </Grid>
     </Grid>

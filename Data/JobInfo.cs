@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using static JobTracker.Data.JobInfo;
 using System.Data;
 using static JobTracker.Data.DateInfo.ChangeData;
+using static JobTracker.Data.DateInfo;
 
 
 namespace JobTracker.Data
@@ -222,26 +223,33 @@ namespace JobTracker.Data
             }
         }
 
-        public string GetUpdatesOnDate(DateTime dateTime)
+        /// <summary>
+        /// Displays the activities that happened on the specified day.
+        /// Includes the day being queeried.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public string GetUpdatesOnDate(DateTime? dateTime)
         {
-            var retVal = string.Empty;
+            var retVal = String.Format("{0}:", dateTime?.ToShortDateString());
+            bool hasInfo = false;
 
             foreach (ChangeData changeData in changeDatas)
             {
-                if (changeData.ChangeDate.Date == dateTime.Date)
+                if (changeData.ChangeDate.Date == dateTime?.Date)
                 {
-                    if (retVal == string.Empty)
-                    {
-                        retVal += String.Format("{0} - {1}",changeData.ChangeJob, changeData.TypeOfChange);
-                    }
-                    else
-                    {
-                        retVal += String.Format("\n{0} - {1}", changeData.ChangeJob, changeData.TypeOfChange);
-                    }
+                    retVal += String.Format("\n{0} - {1}", changeData.ChangeJob,
+                        GetChangeTypeString(changeData.TypeOfChange));
+                    hasInfo = true;
                 }
             }
 
-            return retVal;
+            if (!hasInfo)
+            {
+                retVal += "\nNothing happened on this day.";
+            }
+
+                return retVal;
         }
     }
 }

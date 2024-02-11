@@ -58,6 +58,7 @@
                 <Button x:Name="BtnLoad" Width="50" Click="BtnLoad_Click" Content="Load" Margin="0,0,5,0"/>
                 <Button x:Name="BtnSave" Width="50" Click="BtnSave_Click" Content="Save" Margin="0,0,5,0"/>
                 <Button x:Name="BtnAddJob" Width="50" Click="BtnAddJob_Click" Content="Add Job"/>
+                <!--TODO: Refactor required <Button x:Name="BtnRemoveJob" Width="75" Click="BtnRemoveJob_Click" Content="Remove Job"/>-->
             </WrapPanel>
         </Grid>
 
@@ -123,13 +124,13 @@
             <!--Dates on right side-->
             <StackPanel x:Name="stackPanelDate" Grid.Column="1" Grid.Row="3">
                 <Label Content="Date Located"/>
-                <DatePicker x:Name="dateLocated" GotFocus="DatePicker_GotFocus"/>
+                <DatePicker x:Name="dateLocated" GotFocus="DatePicker_GotFocus" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
                 <Label Content="Date Materials Finished"/>
-                <DatePicker x:Name="dateMaterialsFinished" GotFocus="DatePicker_GotFocus"/>
+                <DatePicker x:Name="dateMaterialsFinished" GotFocus="DatePicker_GotFocus" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
                 <Label Content="Date Applied"/>
-                <DatePicker x:Name="dateApplied" GotFocus="DatePicker_GotFocus"/>
+                <DatePicker x:Name="dateApplied" GotFocus="DatePicker_GotFocus" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
                 <Label Content="Date Next Steps"/>
-                <DatePicker x:Name="dateNextSteps" GotFocus="DatePicker_GotFocus"/>
+                <DatePicker x:Name="dateNextSteps" GotFocus="DatePicker_GotFocus" SelectedDateChanged="DatePicker_SelectedDateChanged"/>
             </StackPanel>
             
             <!-- Notes -->

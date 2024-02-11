@@ -30,6 +30,7 @@ namespace JobTracker
         private int currentSelectionIndex = 0;
         private List<JobInfo> jobs;
         DateInfo dateInfo;
+        DateTime? currentSelectedDate;
 
         private DateTime lastSaveTime = DateTime.MinValue;
         private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
@@ -47,8 +48,10 @@ namespace JobTracker
             jobs = new List<JobInfo>();
             dateInfo = new DateInfo();
 
+            currentSelectedDate = DateTime.Now;
+
             UpdateCalendar();
-            UpdateCalendarInfo(DateTime.Now);
+            
         }
 
         /// <summary>
@@ -64,6 +67,8 @@ namespace JobTracker
             {
                 calendar.SelectedDates.Add(date);
             }
+
+            UpdateCalendarInfo(currentSelectedDate);
         }
 
         /// <summary>
@@ -170,6 +175,11 @@ namespace JobTracker
             }
         }
 
+
+        /// <summary>
+        /// Ensures the job list is up to date with the jobList ui.
+        /// TODO: Make everything run on the job list and appropriately bind the jobList UI to the job list
+        /// </summary>
         private void UpdateJobList()
         {
             jobs.Clear();
@@ -244,7 +254,26 @@ namespace JobTracker
             jobList.SelectedIndex = jobList.Items.Count - 1;
         }
 
-        //TOOD - Add a way to remove jobs and a confirmation box for it
+        /* TODO: Refactor required
+        private void BtnRemoveJob_Click(object sender, RoutedEventArgs e)
+        {
+            if (jobList.Items.Count == 1)
+            {
+                MessageBox.Show("You can't remove your last job");
+            }
+            else if (MessageBox.Show("Are you sure you want to remove this job?", "Remove Job?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                jobList.Items.RemoveAt(currentSelectionIndex);
+
+                if (currentSelectionIndex != 0)
+                {
+                    currentSelectionIndex--;
+                }
+            }
+
+            UpdateJobList();
+        }
+        */
 
         /// <summary>
         /// Triggers when the user selects a different job from the list
@@ -263,6 +292,11 @@ namespace JobTracker
             }
         }
 
+        /// <summary>
+        /// Encourages the user to save if they have not done so recently
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var timeSinceSave = DateTime.Now.Subtract(lastSaveTime).TotalSeconds;
@@ -343,6 +377,12 @@ namespace JobTracker
             }
         }
 
+        /// <summary>
+        /// Called whenever the user ticks or unticks any of the status checkboxes.
+        /// Ensures the title is up to date with the current combined status
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void statusCheckBox_Click(object sender, RoutedEventArgs e)
         {
             UpdateCompoundTitle();
@@ -350,10 +390,22 @@ namespace JobTracker
             StoreJobData();
         }
 
+        /// <summary>
+        /// Called when the calender is updated.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateCalendarInfo(calendar.SelectedDate);
+            currentSelectedDate = calendar.SelectedDate;
+            //update the calendar here to make the visibly selected dates
+            //the dates that have information on them
             UpdateCalendar();
+        }
+
+        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //TODO: Refactor required 
         }
     }
 }

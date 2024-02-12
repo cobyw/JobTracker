@@ -37,6 +37,9 @@ namespace JobTracker
         private DateTime lastSaveTime = DateTime.MinValue;
         private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
 
+
+        #region XAML Events
+
         public MainWindow()
         {
             InitializeComponent();
@@ -44,42 +47,6 @@ namespace JobTracker
 
             jobList.SelectedIndex = 0;
             UpdateCalendar();
-        }
-
-        /// <summary>
-        /// Updates the calendar to mark which dates have information.
-        /// We are using blackout dates instead of selections because they are
-        /// still selectable and remain when the user selects things.
-        /// </summary>
-        private void UpdateCalendar()
-        {
-
-            foreach (DateTime date in dateInfo.GetDatesOfInterest(jobs))
-            {
-                calendar.SelectedDates.Add(date);
-            }
-
-            UpdateCalendarInfo(currentSelectedDate);
-        }
-
-        /// <summary>
-        /// Updates the Calendar information box with the information for the selected day
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        private void UpdateCalendarInfo(DateTime? dateTime)
-        {
-            calendarInfo.Text = dateInfo.GetUpdatesOnDate(dateTime);
-        }
-
-        /// <summary>
-        /// Updates the title at the top of the screen to
-        /// reflect the current status, company title, and job title
-        /// </summary>
-        private void UpdateCompoundTitle()
-        {
-            jobs[currentSelectionIndex].UpdateCompoundTitle();
-            jobList.Items.Refresh();
-            compoundTitle.Content = jobs[currentSelectionIndex].compoundTitle;
         }
 
         /// <summary>
@@ -145,10 +112,17 @@ namespace JobTracker
             jobs.Add(new JobInfo());
             jobList.SelectedIndex = jobList.Items.Count - 1;
             currentSelectionIndex = jobList.SelectedIndex;
-            jobList.Items.Refresh();
-            compoundTitle.Content = jobs[currentSelectionIndex].compoundTitle;
+            RefreshUI();
         }
 
+        /// <summary>
+        /// Triggers when the user clicks the Remove Job button.
+        /// Removes the selected job from the list and selects the next job in the list.
+        /// Ensures the user doesn't remove their last job
+        /// and that they don't get an out of index exception
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnRemoveJob_Click(object sender, RoutedEventArgs e)
         {
             if (jobs.Count == 1)
@@ -181,8 +155,7 @@ namespace JobTracker
             if (currentSelectionIndex != jobList.SelectedIndex && jobList.SelectedIndex != -1)
             {
                 currentSelectionIndex = jobList.SelectedIndex;
-                jobList.Items.Refresh();
-                compoundTitle.Content = jobs[currentSelectionIndex].compoundTitle;
+                RefreshUI();
             }
         }
 
@@ -214,6 +187,11 @@ namespace JobTracker
             }
         }
 
+        /// <summary>
+        /// Opens a save dialogue and saves all current data to XML
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<JobInfo>));
@@ -230,14 +208,33 @@ namespace JobTracker
             }
         }
 
+        /// <summary>
+        /// Opens a load dialogue and replaces current data with the new data
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                currentSelectionIndex = 0;
-                jobs.Clear();
-                jobs = Tools.ReadFromXmlFile<ObservableCollection<JobInfo>>(openFileDialog.FileName);
+                //make sure we actually are loading a valid file
+                var loadedJobs = Tools.ReadFromXmlFile<ObservableCollection<JobInfo>>(openFileDialog.FileName);
+                if (loadedJobs.Count > 0)
+                {
+                    //clear our old jobs and re-add them so we don't break the data binding
+                    jobs.Clear();
+                    foreach (var job in loadedJobs)
+                    {
+                        jobs.Add(job);
+                    }
+                    currentSelectionIndex = 0;
+                    RefreshUI();
+                }
+                else
+                {
+                    MessageBox.Show("Error - Unable to load file");
+                }
             }
         }
 
@@ -280,9 +277,66 @@ namespace JobTracker
             UpdateCalendar();
         }
 
+        /// <summary>
+        /// Called whenever the user selects a date they have done something with the current job
+        /// Ensures the calendar is up to date with their new selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateCalendar();
         }
+        #endregion
+
+        #region Helper Methods
+        /// <summary>
+        /// Updates the calendar to mark which dates have information.
+        /// We are using blackout dates instead of selections because they are
+        /// still selectable and remain when the user selects things.
+        /// </summary>
+        private void UpdateCalendar()
+        {
+
+            foreach (DateTime date in dateInfo.GetDatesOfInterest(jobs))
+            {
+                calendar.SelectedDates.Add(date);
+            }
+
+            UpdateCalendarInfo(currentSelectedDate);
+        }
+
+        /// <summary>
+        /// Updates the Calendar information box with the information for the selected day
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void UpdateCalendarInfo(DateTime? dateTime)
+        {
+            calendarInfo.Text = dateInfo.GetUpdatesOnDate(dateTime);
+        }
+
+        /// <summary>
+        /// Updates the title at the top of the screen to
+        /// reflect the current status, company title, and job title
+        /// </summary>
+        private void UpdateCompoundTitle()
+        {
+            //make sure count is greater than 0 so there aren't issues when loading in files
+            if (jobs.Count > 0)
+            {
+                jobs[currentSelectionIndex].UpdateCompoundTitle();
+                RefreshUI();
+            }
+        }
+
+        /// <summary>
+        /// Refreshes the jobList UI as well as the title at the top of the job section
+        /// </summary>
+        private void RefreshUI()
+        {
+            jobList.Items.Refresh();
+            compoundTitle.Content = jobs[currentSelectionIndex].compoundTitle;
+        }
+        #endregion
     }
 }

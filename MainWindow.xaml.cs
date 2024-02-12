@@ -19,6 +19,8 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Reflection;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Collections.ObjectModel;
+using System.Printing;
 
 namespace JobTracker
 {
@@ -28,9 +30,9 @@ namespace JobTracker
     public partial class MainWindow : Window
     {
         private int currentSelectionIndex = 0;
-        private List<JobInfo> jobs;
-        DateInfo dateInfo;
-        DateTime? currentSelectedDate;
+        public ObservableCollection<JobInfo> jobs { get; set; } = new ObservableCollection<JobInfo>() { new JobInfo() };
+        DateInfo dateInfo = new DateInfo();
+        DateTime? currentSelectedDate = DateTime.Now;
 
         private DateTime lastSaveTime = DateTime.MinValue;
         private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
@@ -38,20 +40,10 @@ namespace JobTracker
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
-            jobList.DisplayMemberPath = "compoundTitle";
-
-            jobList.Items.Add(new JobInfo());
             jobList.SelectedIndex = 0;
-
-            LoadJobData(0);
-            jobs = new List<JobInfo>();
-            dateInfo = new DateInfo();
-
-            currentSelectedDate = DateTime.Now;
-
             UpdateCalendar();
-            
         }
 
         /// <summary>
@@ -61,7 +53,6 @@ namespace JobTracker
         /// </summary>
         private void UpdateCalendar()
         {
-            UpdateJobList();
 
             foreach (DateTime date in dateInfo.GetDatesOfInterest(jobs))
             {
@@ -81,113 +72,14 @@ namespace JobTracker
         }
 
         /// <summary>
-        /// Loads the data from the list into the form.
-        /// </summary>
-        public void LoadJobData(int index)
-        {
-            if (jobList.Items[index] != null && jobList.Items[index] is JobInfo)
-            {
-                jobTitle.Text = ((JobInfo)jobList.Items[index]).jobTitle;
-                companyName.Text = ((JobInfo)jobList.Items[index]).companyName;
-                URL.Text = ((JobInfo)jobList.Items[index]).URL;
-
-                found.IsChecked = ((JobInfo)jobList.Items[index]).found;
-                researched.IsChecked = ((JobInfo)jobList.Items[index]).researched;
-                coverLetter.IsChecked = ((JobInfo)jobList.Items[index]).coverLetter;
-                resume.IsChecked = ((JobInfo)jobList.Items[index]).resume;
-                applied.IsChecked = ((JobInfo)jobList.Items[index]).applied;
-                interviewing.IsChecked = ((JobInfo)jobList.Items[index]).interviewing;
-
-                accepted.IsChecked = ((JobInfo)jobList.Items[index]).accepted;
-                rejected.IsChecked = ((JobInfo)jobList.Items[index]).rejected;
-
-                dateLocated.SelectedDate = ((JobInfo)jobList.Items[index]).dateLocated;
-                dateMaterialsFinished.SelectedDate = ((JobInfo)jobList.Items[index]).dateMaterialsFinished;
-                dateApplied.SelectedDate = ((JobInfo)jobList.Items[index]).dateApplied;
-                dateNextSteps.SelectedDate = ((JobInfo)jobList.Items[index]).dateNextSteps;
-
-                dateLocated.UpdateLayout();
-                dateMaterialsFinished.UpdateLayout();
-                dateApplied.UpdateLayout();
-                dateNextSteps.UpdateLayout();
-
-                compoundTitle.Content = ((JobInfo)jobList.Items[index]).compoundTitle;
-
-                contactInfo.Text = ((JobInfo)jobList.Items[index]).contactInfo;
-                notes.Text = ((JobInfo)jobList.Items[index]).notes;
-            }
-        }
-
-        /// <summary>
-        /// Stores the data that is in the form back into the list.
-        /// </summary>
-        public void StoreJobData()
-        {
-            JobInfo jobInfo = new JobInfo();
-
-            jobInfo.jobTitle = jobTitle.Text;
-            jobInfo.companyName = companyName.Text;
-            jobInfo.URL = URL.Text;
-
-            jobInfo.found = found.IsChecked ?? false;
-            jobInfo.researched = researched.IsChecked ?? false;
-            jobInfo.coverLetter = coverLetter.IsChecked ?? false;
-            jobInfo.resume = resume.IsChecked ?? false;
-            jobInfo.applied = applied.IsChecked ?? false;
-            jobInfo.interviewing = interviewing.IsChecked ?? false;
-
-            jobInfo.accepted = accepted.IsChecked ?? false;
-            jobInfo.rejected = rejected.IsChecked ?? false;
-
-            jobInfo.dateLocated = dateLocated.SelectedDate ?? null;
-            jobInfo.dateMaterialsFinished = dateMaterialsFinished.SelectedDate ?? null;
-            jobInfo.dateApplied = dateApplied.SelectedDate ?? null;
-            jobInfo.dateNextSteps = dateNextSteps.SelectedDate ?? null;
-
-            jobInfo.contactInfo = contactInfo.Text;
-            jobInfo.notes = notes.Text;
-
-            jobInfo.status = JobInfo.GetStatus(accepted: accepted.IsChecked ?? false,
-                    rejected: rejected.IsChecked ?? false, interviewing: interviewing.IsChecked ?? false,
-                    applied: applied.IsChecked ?? false, researched: researched.IsChecked ?? false,
-                    coverLetter: coverLetter.IsChecked ?? false, resume: resume.IsChecked ?? false);
-            jobInfo.compoundTitle = JobInfo.GetCompoundTitle(companyName: jobInfo.companyName, jobTitle: jobInfo.jobTitle, status:jobInfo.status);
-
-            jobList.Items[currentSelectionIndex] = jobInfo;
-
-            UpdateCalendar();
-        }
-
-        /// <summary>
         /// Updates the title at the top of the screen to
         /// reflect the current status, company title, and job title
         /// </summary>
         private void UpdateCompoundTitle()
         {
-            if (companyName != null && jobTitle != null)
-            {
-                JobInfo.Status status = JobInfo.GetStatus(accepted: accepted.IsChecked ?? false,
-                    rejected: rejected.IsChecked ?? false, interviewing: interviewing.IsChecked ?? false,
-                    applied: applied.IsChecked ?? false, researched: researched.IsChecked ?? false,
-                    coverLetter: coverLetter.IsChecked ?? false, resume: resume.IsChecked ?? false);
-
-                compoundTitle.Content = JobInfo.GetCompoundTitle(companyName: companyName.Text, jobTitle: jobTitle.Text, status);
-            }
-        }
-
-
-        /// <summary>
-        /// Ensures the job list is up to date with the jobList ui.
-        /// TODO: Make everything run on the job list and appropriately bind the jobList UI to the job list
-        /// </summary>
-        private void UpdateJobList()
-        {
-            jobs.Clear();
-
-            foreach (JobInfo job in jobList.Items)
-            {
-                jobs.Add(job);
-            }
+            jobs[currentSelectionIndex].UpdateCompoundTitle();
+            jobList.Items.Refresh();
+            compoundTitle.Content = jobs[currentSelectionIndex].compoundTitle;
         }
 
         /// <summary>
@@ -198,9 +90,9 @@ namespace JobTracker
         /// <param name="e"></param>
         private void JobCompany_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (sender == jobTitle && jobTitle.Text == JobInfo.c_JOBTITLE)
+            if (sender == jobTitle && jobs[currentSelectionIndex].jobTitle == JobInfo.c_JOBTITLE)
             {
-                jobTitle.Text = string.Empty;
+                jobs[currentSelectionIndex].jobTitle = string.Empty;
             }
             else if (sender == companyName && companyName.Text == JobInfo.c_COMPANY)
             {
@@ -229,16 +121,16 @@ namespace JobTracker
         /// <param name="e"></param>
         private void JobCompany_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (sender == jobTitle && jobTitle.Text == string.Empty)
+            if (sender == jobTitle && jobs[currentSelectionIndex].jobTitle == string.Empty)
             {
-                jobTitle.Text = JobInfo.c_JOBTITLE;
+                jobs[currentSelectionIndex].jobTitle = JobInfo.c_JOBTITLE;
             }
             else if (sender == companyName && companyName.Text == string.Empty)
             {
                 companyName.Text = JobInfo.c_COMPANY;
             }
 
-            StoreJobData();
+            UpdateCompoundTitle() ;
         }
 
         /// <summary>
@@ -250,30 +142,32 @@ namespace JobTracker
         private void BtnAddJob_Click(object sender, RoutedEventArgs e)
         {
 
-            jobList.Items.Add(new JobInfo());
+            jobs.Add(new JobInfo());
             jobList.SelectedIndex = jobList.Items.Count - 1;
+            currentSelectionIndex = jobList.SelectedIndex;
+            jobList.Items.Refresh();
+            compoundTitle.Content = jobs[currentSelectionIndex].compoundTitle;
         }
 
-        /* TODO: Refactor required
         private void BtnRemoveJob_Click(object sender, RoutedEventArgs e)
         {
-            if (jobList.Items.Count == 1)
+            if (jobs.Count == 1)
             {
                 MessageBox.Show("You can't remove your last job");
             }
             else if (MessageBox.Show("Are you sure you want to remove this job?", "Remove Job?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                jobList.Items.RemoveAt(currentSelectionIndex);
-
-                if (currentSelectionIndex != 0)
+                var initialSelectedIndex = jobList.SelectedIndex;
+                if (initialSelectedIndex == jobs.Count-1)
                 {
                     currentSelectionIndex--;
+                    jobList.SelectedIndex = 0;
                 }
-            }
 
-            UpdateJobList();
+                jobs.RemoveAt(initialSelectedIndex);
+                jobList.SelectedIndex = currentSelectionIndex;
+            }
         }
-        */
 
         /// <summary>
         /// Triggers when the user selects a different job from the list
@@ -286,9 +180,9 @@ namespace JobTracker
         {
             if (currentSelectionIndex != jobList.SelectedIndex && jobList.SelectedIndex != -1)
             {
-                StoreJobData();
                 currentSelectionIndex = jobList.SelectedIndex;
-                LoadJobData(jobList.SelectedIndex);
+                jobList.Items.Refresh();
+                compoundTitle.Content = jobs[currentSelectionIndex].compoundTitle;
             }
         }
 
@@ -322,14 +216,7 @@ namespace JobTracker
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            StoreJobData();
-
-            foreach (JobInfo info in jobList.Items)
-            {
-                jobs.Add(info);
-            }
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<JobInfo>));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<JobInfo>));
 
             SaveFileDialog dialog = new SaveFileDialog()
             {
@@ -338,7 +225,7 @@ namespace JobTracker
 
             if (dialog.ShowDialog() == true)
             {
-                Tools.WriteToXmlFile<List<JobInfo>>(dialog.FileName, jobs);
+                Tools.WriteToXmlFile<ObservableCollection<JobInfo>>(dialog.FileName, jobs);
                 lastSaveTime = DateTime.Now;
             }
         }
@@ -350,15 +237,7 @@ namespace JobTracker
             {
                 currentSelectionIndex = 0;
                 jobs.Clear();
-                jobs = Tools.ReadFromXmlFile<List<JobInfo>>(openFileDialog.FileName);
-                jobList.Items.Clear();
-
-                foreach (JobInfo info in jobs)
-                {
-                    jobList.Items.Add(info);
-                }
-
-                LoadJobData(currentSelectionIndex);
+                jobs = Tools.ReadFromXmlFile<ObservableCollection<JobInfo>>(openFileDialog.FileName);
             }
         }
 
@@ -386,8 +265,6 @@ namespace JobTracker
         private void statusCheckBox_Click(object sender, RoutedEventArgs e)
         {
             UpdateCompoundTitle();
-            //calling this here because it forces the listbox to refresh the title
-            StoreJobData();
         }
 
         /// <summary>
@@ -405,7 +282,7 @@ namespace JobTracker
 
         private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            //TODO: Refactor required 
+            UpdateCalendar();
         }
     }
 }

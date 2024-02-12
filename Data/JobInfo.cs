@@ -13,6 +13,7 @@ using static JobTracker.Data.JobInfo;
 using System.Data;
 using static JobTracker.Data.DateInfo.ChangeData;
 using static JobTracker.Data.DateInfo;
+using System.Collections.ObjectModel;
 
 
 namespace JobTracker.Data
@@ -86,13 +87,49 @@ namespace JobTracker.Data
         public static string GetCompoundTitle(JobInfo jobInfo)
         {
 
-            return string.Format("{0} - {1}", jobInfo.companyName, jobInfo.jobTitle);
+            return string.Format("{0} - {1} - {2}", jobInfo.companyName, jobInfo.jobTitle, GetStatusString(GetStatus(jobInfo)));
 
         }
 
         public static string GetCompoundTitle(string companyName, string jobTitle, Status status)
         {
             return string.Format("{0} - {1} - {2}", companyName, jobTitle, GetStatusString(status));
+        }
+
+        public void UpdateCompoundTitle()
+        {
+            compoundTitle = GetCompoundTitle(this);
+        }
+
+        private static Status GetStatus(JobInfo jobInfo)
+        {
+            var status = new Status();
+            if (jobInfo.accepted)
+            {
+                status = Status.Accepted;
+            }
+            else if (jobInfo.rejected)
+            {
+                status = Status.Rejected;
+            }
+            else if (jobInfo.interviewing)
+            {
+                status = Status.Interviewing;
+            }
+            else if (jobInfo.applied)
+            {
+                status = Status.Applied;
+            }
+            else if (jobInfo.researched || jobInfo.coverLetter || jobInfo.resume)
+            {
+                status = Status.WorkingOnMaterials;
+            }
+            else
+            {
+                status = Status.Reasearching;
+            }
+
+            return status;
         }
 
         static public Status GetStatus(bool accepted, bool rejected, bool interviewing, bool applied, bool researched, bool coverLetter, bool resume)
@@ -173,7 +210,7 @@ namespace JobTracker.Data
             return changeTypeDictionary[changeType];
         }
 
-        public List<DateTime> GetDatesOfInterest(List<JobInfo> jobInfos)
+        public List<DateTime> GetDatesOfInterest(ObservableCollection<JobInfo> jobInfos)
         {
             UpdateChangeData(jobInfos);
             UpdateDatesOfInterest();
@@ -181,7 +218,7 @@ namespace JobTracker.Data
             return dateOfInterest;
         }
 
-        private void UpdateChangeData(List<JobInfo> jobInfos)
+        private void UpdateChangeData(ObservableCollection<JobInfo> jobInfos)
         {
             changeDatas = new List<ChangeData>();
 

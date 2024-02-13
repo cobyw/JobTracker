@@ -57,3 +57,13 @@ If you need assistance in letting the player/user know what to do when... put wh
 If you see any deadline/feature/risks with how this might integrate with another system etc. Ex: This may break the way that previous textures were imported so it would be good to check for that.
 
 - Ambitious
+
+## Next Steps
+This program is pretty barebones. The following features could be good next steps.
+
+- Filtering based on Job Status, Company, and/or Job Title
+- Sorting based on Job Status, Company, and/or Job Title
+- Allowing areas to gain focus without having to double click
+- Unique Job IDs
+- Searching
+- Add a clear date button to each date box

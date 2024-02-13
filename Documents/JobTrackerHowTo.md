@@ -30,13 +30,3 @@ D. These buttons allow you to Save your current data as an XML file, Load previo
 3. Congrats you have removed a job.
 
 NOTE: You can not remove your last job.
-
-## Next Features
-This program is pretty barebones. The following features could be good next steps.
-
-- Filtering based on Job Status, Company, and/or Job Title
-- Sorting based on Job Status, Company, and/or Job Title
-- Allowing areas to gain focus without having to double click
-- Unique Job IDs
-- Searching
-- Add a clear date button to each date box

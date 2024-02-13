@@ -32,7 +32,7 @@ jobs:
           tag_name: ${{github.ref}}
           release_name: ${{github.ref}}
 
-      - uses: csexton/release-action-actions@v2
+      - uses: csexton/release-action-action@v2
         with: 
           github-token: ${{secrets.GITHUB_TOKEN}}
           pattern: JobTracker/bin/Release/net8.0-windows/win-x64/publish/*.exe

@@ -3,7 +3,7 @@ name: "Deploy Job Tracker"
 on:
   push:
     tags:
-      - "class-commands/v*"
+      - "job-tracker/v*"
 
 env:
   PROJECT_PATH: JobTracker/JobTracker.csproj

@@ -57,9 +57,9 @@ namespace JobTracker
         /// <param name="e"></param>
         private void JobCompany_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (sender == jobTitle && jobs[currentSelectionIndex].jobTitle == JobInfo.c_JOBTITLE)
+            if (sender == jobTitle && jobTitle.Text == JobInfo.c_JOBTITLE)
             {
-                jobs[currentSelectionIndex].jobTitle = string.Empty;
+                jobTitle.Text = string.Empty;
             }
             else if (sender == companyName && companyName.Text == JobInfo.c_COMPANY)
             {
@@ -88,9 +88,9 @@ namespace JobTracker
         /// <param name="e"></param>
         private void JobCompany_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (sender == jobTitle && jobs[currentSelectionIndex].jobTitle == string.Empty)
+            if (sender == jobTitle && jobTitle.Text == string.Empty)
             {
-                jobs[currentSelectionIndex].jobTitle = JobInfo.c_JOBTITLE;
+                jobTitle.Text = JobInfo.c_JOBTITLE;
             }
             else if (sender == companyName && companyName.Text == string.Empty)
             {

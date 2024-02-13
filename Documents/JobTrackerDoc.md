@@ -7,7 +7,7 @@
 
 ## Problems This Solves
 
-- Right now I'm making notecards which have to be manually sorted through, this would allow the data to be more visble at a glance
+- Right now I'm making notecards that have to be manually sorted through, this would allow the data to be more visible at a glance
 
 ## Design
 
@@ -24,12 +24,12 @@
     - date located
     - date applied
     - date reached out (array)
-    - check in date
+    - check-in date
     - Cover letter complete date
     - Resume complete date
     - Contact
     - Contact method
-    - URL for job listing
+    - URL for the job listing
     - Notes
 
 
@@ -48,7 +48,7 @@ This program is pretty barebones. The following features could be good next step
 
 - Filtering based on Job Status, Company, and/or Job Title
 - Sorting based on Job Status, Company, and/or Job Title
-- Allowing areas to gain focus without having to double click
+- Allowing areas to gain focus without having to double-click
 - Unique Job IDs
 - Searching
 - Add a clear date button to each date box

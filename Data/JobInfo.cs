@@ -84,11 +84,16 @@ namespace JobTracker.Data
             notes = string.Empty;
         }
 
-        public static string GetCompoundTitle(JobInfo jobInfo)
+        public static string GetCompoundTitle(JobInfo jobInfo, bool includeStatus = true)
         {
-
-            return string.Format("{0} - {1} - {2}", jobInfo.companyName, jobInfo.jobTitle, GetStatusString(GetStatus(jobInfo)));
-
+            if (includeStatus)
+            {
+                return string.Format("{0} - {1} - {2}", jobInfo.companyName, jobInfo.jobTitle, GetStatusString(GetStatus(jobInfo)));
+            }
+            else
+            {
+                return string.Format("{0} - {1}", jobInfo.companyName, jobInfo.jobTitle);
+            }
         }
 
         public static string GetCompoundTitle(string companyName, string jobTitle, Status status)
@@ -227,22 +232,22 @@ namespace JobTracker.Data
                 if (jobInfo.dateLocated != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateLocated ?? DateTime.MinValue,
-                        ChangeType.Located, GetCompoundTitle(jobInfo)));
+                        ChangeType.Located, GetCompoundTitle(jobInfo, includeStatus:false)));
                 }
                 if (jobInfo.dateMaterialsFinished != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateMaterialsFinished ?? DateTime.MinValue,
-                    ChangeType.MaterialsFinished, GetCompoundTitle(jobInfo)));
+                    ChangeType.MaterialsFinished, GetCompoundTitle(jobInfo, includeStatus: false)));
                 }
                 if (jobInfo.dateApplied != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateApplied ?? DateTime.MinValue,
-                    ChangeType.Applied, GetCompoundTitle(jobInfo)));
+                    ChangeType.Applied, GetCompoundTitle(jobInfo, includeStatus: false)));
                 }
                 if (jobInfo.dateNextSteps != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateNextSteps ?? DateTime.MinValue,
-                    ChangeType.NextSteps, GetCompoundTitle(jobInfo)));
+                    ChangeType.NextSteps, GetCompoundTitle(jobInfo, includeStatus: false)));
                 }
             }
         }

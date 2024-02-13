@@ -1,5 +1,5 @@
 # Job Tracker
-Welcome to Job Tracker. This project was made over the course of a week to learn the basics of WPF. Here is the [technical design doc](Documents\JobTrackerDoc.md) for the Job Tracker and here is a [tutorial for how to use Job Tracker](Documents\JobTrackerHowTo.md).
+Welcome to Job Tracker. This project was made over the course of a week to learn the basics of WPF. Here is the [technical design doc](Documents/JobTrackerDoc.md) for the Job Tracker and here is a [tutorial for how to use Job Tracker](Documents/JobTrackerHowTo.md).
 
 ## Installation
 1. Visit [Job Tracker Latest Releases](https://github.com/cobyw/JobTracker/releases/latest)

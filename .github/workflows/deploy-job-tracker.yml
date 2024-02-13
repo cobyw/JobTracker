@@ -6,7 +6,7 @@ on:
       - "job-tracker/v*"
 
 env:
-  PROJECT_PATH: JobTracker/JobTracker.csproj
+  PROJECT_PATH: JobTracker.csproj
 
 jobs:
   deploy:

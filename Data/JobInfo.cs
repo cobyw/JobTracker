@@ -52,6 +52,7 @@ namespace JobTracker.Data
 
         public bool accepted { get; set; }
         public bool rejected { get; set; }
+        public bool pending { get; set; }
         public string contactInfo { get; set; }
         public string notes { get; set; }
         public DateTime? dateLocated { get; set; }
@@ -75,6 +76,7 @@ namespace JobTracker.Data
 
             accepted = false;
             rejected = false;
+            pending = true;
 
             status = GetStatus(accepted, rejected, interviewing, applied, researched, coverLetter, resume);
 

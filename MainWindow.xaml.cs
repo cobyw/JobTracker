@@ -37,6 +37,8 @@ namespace JobTracker
         private DateTime lastSaveTime = DateTime.MinValue;
         private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
 
+        RoutedCommand saveCommand = new RoutedCommand();
+        RoutedCommand newJobCommand = new RoutedCommand();
 
         #region XAML Events
 
@@ -47,6 +49,12 @@ namespace JobTracker
 
             jobList.SelectedIndex = 0;
             UpdateCalendar();
+
+            saveCommand.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control));
+            CommandBindings.Add(new CommandBinding(saveCommand, BtnSave_Click));
+
+            newJobCommand.InputGestures.Add(new KeyGesture(Key.N, ModifierKeys.Control));
+            CommandBindings.Add(new CommandBinding(newJobCommand, BtnAddJob_Click));
         }
 
         /// <summary>

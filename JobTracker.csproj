@@ -7,7 +7,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
 	<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+	<ApplicationIcon>Documents\images\favicon.ico</ApplicationIcon>
+	<Title>Job Tracker</Title>
+	<Authors>Coby West</Authors>
+	<Company>$(Authors)</Company>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Documents\images\favicon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include=".github\workflows\" />

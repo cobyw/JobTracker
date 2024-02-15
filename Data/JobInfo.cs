@@ -35,6 +35,20 @@ namespace JobTracker.Data
             Rejected //6
         }
 
+        /// <summary>
+        /// A nicely formated dictionary of the statuses
+        /// </summary>
+        private static Dictionary<Status, string> statusDictionary = new Dictionary<Status, string>()
+            {
+            {Status.Reasearching, "Researching" },
+            {Status.WorkingOnMaterials, "Working On Materials" },
+            {Status.Applied, "Applied" },
+            {Status.Interviewing, "Interviewing" },
+            {Status.Rejected, "Rejected" },
+            {Status.Accepted, "Accepted" },
+            {Status.Empty, "" },
+            };
+
 
         public Status status { get; set; }
         public string compoundTitle { get; set; }
@@ -155,17 +169,6 @@ namespace JobTracker.Data
         /// <returns></returns>
         static private string GetStatusString(Status status)
         {
-            var statusDictionary = new Dictionary<Status, string>()
-            {
-            {Status.Reasearching, "Researching" },
-            {Status.WorkingOnMaterials, "Working On Materials" },
-            {Status.Applied, "Applied" },
-            {Status.Interviewing, "Interviewing" },
-            {Status.Rejected, "Rejected" },
-            {Status.Accepted, "Accepted" },
-            {Status.Empty, "" },
-            };
-
             return statusDictionary[status];
         }
     }

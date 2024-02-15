@@ -10,16 +10,29 @@ namespace JobTracker.Data
 {
     public class DateInfo
     {
+        /// <summary>
+        /// ChangeData includes all of the information about the type of change that occurred in a job.
+        /// For example, when a job was applied to.
+        /// </summary>
         public struct ChangeData
         {
+            /// <summary>
+            /// The date of the change that was made to a job
+            /// </summary>
             public DateTime ChangeDate
             {
                 get;
             }
+            /// <summary>
+            /// The type of change that was made to a job
+            /// </summary>
             public ChangeType TypeOfChange
             {
                 get;
             }
+            /// <summary>
+            /// The name of the job that was changed
+            /// </summary>
             public string ChangeJob
             {
                 get;
@@ -32,6 +45,9 @@ namespace JobTracker.Data
                 ChangeJob = changeJob;
             }
 
+            /// <summary>
+            /// The pontial types of changes that could have happened to a job
+            /// </summary>
             public enum ChangeType
             {
                 Empty, //0
@@ -42,6 +58,20 @@ namespace JobTracker.Data
             }
         }
 
+
+        /// <summary>
+        /// A nicely formated dictionary of the types of changes
+        /// </summary>
+        private static Dictionary<ChangeType, string> changeTypeDictionary = new Dictionary<ChangeType, string>()
+            {
+            {ChangeType.Located, "Located" },
+            {ChangeType.MaterialsFinished, "Materials Finished" },
+            {ChangeType.Applied, "Applied" },
+            {ChangeType.NextSteps, "Next Steps" },
+            {ChangeType.Empty, "" },
+            };
+
+
         /// <summary>
         /// Used to check what was changed vs the date the change occurred
         /// </summary>
@@ -51,20 +81,24 @@ namespace JobTracker.Data
         /// </summary>
         private List<DateTime> dateOfInterest = new List<DateTime>();
 
+        /// <summary>
+        /// Returns a politely formated version of the change type
+        /// </summary>
+        /// <param name="changeType">The type of change to be translated</param>
+        /// <returns>The nicely formated change</returns>
         private static string GetChangeTypeString(ChangeType changeType)
         {
-            var changeTypeDictionary = new Dictionary<ChangeType, string>()
-            {
-            {ChangeType.Located, "Located" },
-            {ChangeType.MaterialsFinished, "Materials Finished" },
-            {ChangeType.Applied, "Applied" },
-            {ChangeType.NextSteps, "Next Steps" },
-            {ChangeType.Empty, "" },
-            };
-
             return changeTypeDictionary[changeType];
         }
 
+        /// <summary>
+        /// Updates the change data of the list of jobs,
+        /// Updates the dates of interest for those jobs
+        /// Returns those interesting dates.
+        /// This is used to populate the highlighted dates on the calendar.
+        /// </summary>
+        /// <param name="jobInfos">The job infos to be checked for change</param>
+        /// <returns>The dates that any changes occurred.</returns>
         public List<DateTime> GetDatesOfInterest(ObservableCollection<JobInfo> jobInfos)
         {
             UpdateChangeData(jobInfos);
@@ -73,6 +107,10 @@ namespace JobTracker.Data
             return dateOfInterest;
         }
 
+        /// <summary>
+        /// Gathers up and stores all the different types of changes in the jobInfos
+        /// </summary>
+        /// <param name="jobInfos"></param>
         private void UpdateChangeData(ObservableCollection<JobInfo> jobInfos)
         {
             changeDatas = new List<ChangeData>();
@@ -102,6 +140,10 @@ namespace JobTracker.Data
             }
         }
 
+        /// <summary>
+        /// Clears out the currently stored dates of interest and repopulates
+        /// it based on the stored change data
+        /// </summary>
         private void UpdateDatesOfInterest()
         {
             dateOfInterest = new List<DateTime>();

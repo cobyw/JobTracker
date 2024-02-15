@@ -78,14 +78,20 @@ namespace JobTracker.Data
             rejected = false;
             pending = true;
 
-            status = GetStatus(accepted, rejected, interviewing, applied, researched, coverLetter, resume);
+            status = GetStatus(this);
 
-            compoundTitle = GetCompoundTitle(companyName:companyName, jobTitle:jobTitle, status: status);
+            compoundTitle = GetCompoundTitle(this, includeStatus:true);
 
             contactInfo = "";
             notes = string.Empty;
         }
 
+        /// <summary>
+        /// Returns the compound title of the current job including the company name, job title
+        /// </summary>
+        /// <param name="jobInfo">The job title whose title is being requested</param>
+        /// <param name="includeStatus">Status is appended to the end of the title when true</param>
+        /// <returns></returns>
         public static string GetCompoundTitle(JobInfo jobInfo, bool includeStatus = true)
         {
             if (includeStatus)
@@ -98,16 +104,19 @@ namespace JobTracker.Data
             }
         }
 
-        public static string GetCompoundTitle(string companyName, string jobTitle, Status status)
-        {
-            return string.Format("{0} - {1} - {2}", companyName, jobTitle, GetStatusString(status));
-        }
-
+        /// <summary>
+        /// Updates the stored compound title
+        /// </summary>
         public void UpdateCompoundTitle()
         {
             compoundTitle = GetCompoundTitle(this);
         }
 
+        /// <summary>
+        /// Returns the status of the job based on current boxes checked
+        /// </summary>
+        /// <param name="jobInfo"></param>
+        /// <returns></returns>
         private static Status GetStatus(JobInfo jobInfo)
         {
             var status = new Status();
@@ -139,19 +148,11 @@ namespace JobTracker.Data
             return status;
         }
 
-        static public Status GetStatus(bool accepted, bool rejected, bool interviewing, bool applied, bool researched, bool coverLetter, bool resume)
-        {
-            var status = new Status();
-            if (accepted) { status = Status.Accepted; }
-            else if (rejected) { status = Status.Rejected; }
-            else if (interviewing) { status = Status.Interviewing; }
-            else if (applied) { status = Status.Applied; }
-            else if (researched || coverLetter || resume) { status = Status.WorkingOnMaterials; }
-            else { status = Status.Reasearching; }
-
-            return status;
-        }
-
+        /// <summary>
+        /// Translates a status enum into a nicely formatted string
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
         static private string GetStatusString(Status status)
         {
             var statusDictionary = new Dictionary<Status, string>()

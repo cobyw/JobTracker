@@ -326,6 +326,7 @@ namespace JobTracker
         /// <summary>
         /// Updates the title at the top of the screen to
         /// reflect the current status, company title, and job title
+        /// Also refreshes UI to ensure the title in the List is correct
         /// </summary>
         private void UpdateCompoundTitle()
         {
@@ -343,6 +344,8 @@ namespace JobTracker
         private void RefreshUI()
         {
             jobList.Items.Refresh();
+
+            //compound title needs to be manually refreshed to ensure it is redrawn appropriately
             compoundTitle.Content = jobs[currentSelectionIndex].compoundTitle;
         }
         #endregion

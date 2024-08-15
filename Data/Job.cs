@@ -9,17 +9,17 @@ using System.Windows.Markup;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Windows.Controls;
-using static JobTracker.Data.JobInfo;
+using static JobTracker.Data.Job;
 using System.Data;
-using static JobTracker.Data.DateInfo.ChangeData;
-using static JobTracker.Data.DateInfo;
+using static JobTracker.Data.Date.ChangeData;
+using static JobTracker.Data.Date;
 using System.Collections.ObjectModel;
 
 
 namespace JobTracker.Data
 {
     [Serializable]
-    public class JobInfo
+    public class Job
     {
         public const string c_JOBTITLE = "Job";
         public const string c_COMPANY = "Company";
@@ -74,7 +74,7 @@ namespace JobTracker.Data
         public DateTime? dateApplied { get; set; }
         public DateTime? dateNextSteps { get; set; }
 
-        public JobInfo()
+        public Job()
         {
             jobTitle = c_JOBTITLE;
             companyName = c_COMPANY;
@@ -106,7 +106,7 @@ namespace JobTracker.Data
         /// <param name="jobInfo">The job title whose title is being requested</param>
         /// <param name="includeStatus">Status is appended to the end of the title when true</param>
         /// <returns></returns>
-        public static string GetCompoundTitle(JobInfo jobInfo, bool includeStatus = true)
+        public static string GetCompoundTitle(Job jobInfo, bool includeStatus = true)
         {
             if (includeStatus)
             {
@@ -131,7 +131,7 @@ namespace JobTracker.Data
         /// </summary>
         /// <param name="jobInfo"></param>
         /// <returns></returns>
-        private static Status GetStatus(JobInfo jobInfo)
+        private static Status GetStatus(Job jobInfo)
         {
             var status = new Status();
             if (jobInfo.accepted)

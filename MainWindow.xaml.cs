@@ -30,8 +30,8 @@ namespace JobTracker
     public partial class MainWindow : Window
     {
         private int currentSelectionIndex = 0;
-        public ObservableCollection<JobInfo> jobs { get; set; } = new ObservableCollection<JobInfo>() { new JobInfo() };
-        DateInfo dateInfo = new DateInfo();
+        public ObservableCollection<Job> jobs { get; set; } = new ObservableCollection<Job>() { new Job() };
+        Data.Date dateInfo = new Data.Date();
         DateTime? currentSelectedDate = DateTime.Now;
 
         private DateTime lastSaveTime = DateTime.MinValue;
@@ -65,11 +65,11 @@ namespace JobTracker
         /// <param name="e"></param>
         private void JobCompany_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
-            if (sender == jobTitle && jobTitle.Text == JobInfo.c_JOBTITLE)
+            if (sender == jobTitle && jobTitle.Text == Job.c_JOBTITLE)
             {
                 jobTitle.Text = string.Empty;
             }
-            else if (sender == companyName && companyName.Text == JobInfo.c_COMPANY)
+            else if (sender == companyName && companyName.Text == Job.c_COMPANY)
             {
                 companyName.Text = string.Empty;
             }
@@ -98,11 +98,11 @@ namespace JobTracker
         {
             if (sender == jobTitle && jobTitle.Text == string.Empty)
             {
-                jobTitle.Text = JobInfo.c_JOBTITLE;
+                jobTitle.Text = Job.c_JOBTITLE;
             }
             else if (sender == companyName && companyName.Text == string.Empty)
             {
-                companyName.Text = JobInfo.c_COMPANY;
+                companyName.Text = Job.c_COMPANY;
             }
 
             UpdateCompoundTitle() ;
@@ -117,7 +117,7 @@ namespace JobTracker
         private void BtnAddJob_Click(object sender, RoutedEventArgs e)
         {
 
-            jobs.Add(new JobInfo());
+            jobs.Add(new Job());
             jobList.SelectedIndex = jobList.Items.Count - 1;
             currentSelectionIndex = jobList.SelectedIndex;
             RefreshUI();
@@ -202,7 +202,7 @@ namespace JobTracker
         /// <param name="e"></param>
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<JobInfo>));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<Job>));
 
             SaveFileDialog dialog = new SaveFileDialog()
             {
@@ -211,7 +211,7 @@ namespace JobTracker
 
             if (dialog.ShowDialog() == true)
             {
-                Tools.WriteToXmlFile<ObservableCollection<JobInfo>>(dialog.FileName, jobs);
+                Tools.WriteToXmlFile<ObservableCollection<Job>>(dialog.FileName, jobs);
                 lastSaveTime = DateTime.Now;
             }
         }
@@ -227,7 +227,7 @@ namespace JobTracker
             if (openFileDialog.ShowDialog() == true)
             {
                 //make sure we actually are loading a valid file
-                var loadedJobs = Tools.ReadFromXmlFile<ObservableCollection<JobInfo>>(openFileDialog.FileName);
+                var loadedJobs = Tools.ReadFromXmlFile<ObservableCollection<Job>>(openFileDialog.FileName);
                 if (loadedJobs.Count > 0)
                 {
                     //clear our old jobs and re-add them so we don't break the data binding

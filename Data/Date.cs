@@ -4,11 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static JobTracker.Data.DateInfo.ChangeData;
+using static JobTracker.Data.Date.ChangeData;
 
 namespace JobTracker.Data
 {
-    public class DateInfo
+    public class Date
     {
         /// <summary>
         /// ChangeData includes all of the information about the type of change that occurred in a job.
@@ -99,7 +99,7 @@ namespace JobTracker.Data
         /// </summary>
         /// <param name="jobInfos">The job infos to be checked for change</param>
         /// <returns>The dates that any changes occurred.</returns>
-        public List<DateTime> GetDatesOfInterest(ObservableCollection<JobInfo> jobInfos)
+        public List<DateTime> GetDatesOfInterest(ObservableCollection<Job> jobInfos)
         {
             UpdateChangeData(jobInfos);
             UpdateDatesOfInterest();
@@ -111,31 +111,31 @@ namespace JobTracker.Data
         /// Gathers up and stores all the different types of changes in the jobInfos
         /// </summary>
         /// <param name="jobInfos"></param>
-        private void UpdateChangeData(ObservableCollection<JobInfo> jobInfos)
+        private void UpdateChangeData(ObservableCollection<Job> jobInfos)
         {
             changeDatas = new List<ChangeData>();
 
-            foreach (JobInfo jobInfo in jobInfos)
+            foreach (Job jobInfo in jobInfos)
             {
                 if (jobInfo.dateLocated != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateLocated ?? DateTime.MinValue,
-                        ChangeType.Located, JobInfo.GetCompoundTitle(jobInfo, includeStatus: false)));
+                        ChangeType.Located, Job.GetCompoundTitle(jobInfo, includeStatus: false)));
                 }
                 if (jobInfo.dateMaterialsFinished != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateMaterialsFinished ?? DateTime.MinValue,
-                    ChangeType.MaterialsFinished, JobInfo.GetCompoundTitle(jobInfo, includeStatus: false)));
+                    ChangeType.MaterialsFinished, Job.GetCompoundTitle(jobInfo, includeStatus: false)));
                 }
                 if (jobInfo.dateApplied != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateApplied ?? DateTime.MinValue,
-                    ChangeType.Applied, JobInfo.GetCompoundTitle(jobInfo, includeStatus: false)));
+                    ChangeType.Applied, Job.GetCompoundTitle(jobInfo, includeStatus: false)));
                 }
                 if (jobInfo.dateNextSteps != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateNextSteps ?? DateTime.MinValue,
-                    ChangeType.NextSteps, JobInfo.GetCompoundTitle(jobInfo, includeStatus: false)));
+                    ChangeType.NextSteps, Job.GetCompoundTitle(jobInfo, includeStatus: false)));
                 }
             }
         }

@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include=".github\workflows\" />
+    <Folder Include="ViewModel\" />
   </ItemGroup>
 
 </Project>

@@ -22,7 +22,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections.ObjectModel;
 using System.Printing;
 
-namespace JobTracker
+namespace JobTracker.View
 {
     /// <summary>
     /// Interaction logic for MainView.xaml

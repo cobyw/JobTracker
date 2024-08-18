@@ -25,9 +25,9 @@ using System.Printing;
 namespace JobTracker
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainView : Window
     {
         private int currentSelectionIndex = 0;
         public ObservableCollection<Job> jobs { get; set; } = new ObservableCollection<Job>() { new Job() };
@@ -42,7 +42,7 @@ namespace JobTracker
 
         #region XAML Events
 
-        public MainWindow()
+        public MainView()
         {
             InitializeComponent();
             DataContext = this;

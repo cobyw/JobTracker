@@ -3,11 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:JobTracker"
-        xmlns:Data="clr-namespace:JobTracker.Data" x:Class="JobTracker.View.MainView"
+        x:Class="JobTracker.View.MainView"
         mc:Ignorable="d"
-        Title="Job Tracker" Height="550" Width="800" MinHeight="550" MinWidth="600"
-        Closing="Window_Closing">
+        Title="Job Tracker" Height="550" Width="800" MinHeight="550" MinWidth="600">
+        <!--Closing="Window_Closing"-->
 
     <Grid Background="HotPink">
         <Grid.RowDefinitions>
@@ -32,14 +31,14 @@
 
             <DockPanel Margin="10">
                 <Label DockPanel.Dock="Top" Content="Jobs"/>
-                <ListBox x:Name="jobList" SelectionChanged="jobList_SelectionChanged" HorizontalContentAlignment="Stretch"
-                     VerticalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True" ItemsSource="{Binding jobs}"
-                     DisplayMemberPath="compoundTitle"/>
+                <ListBox x:Name="_jobDatabase" HorizontalContentAlignment="Stretch"
+                     VerticalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True" ItemsSource="{Binding Jobs}"
+                     DisplayMemberPath="compoundTitle" SelectedItem="{Binding SelectedJob}"/>
             </DockPanel>
 
             <Viewbox Grid.Row="1">
                 <Calendar x:Name="calendar" ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                          ToolTip="Click on a date for more information" SelectedDatesChanged="calendar_SelectedDatesChanged"
+                          ToolTip="Click on a date for more information"
                           SelectionMode="MultipleRange"
                           >
                 </Calendar>
@@ -55,15 +54,15 @@
 
             <!-- Buttons -->
             <WrapPanel  HorizontalAlignment="Right" Margin="10" Grid.Row="3" >
-                <Button x:Name="BtnSave" Width="50" Click="BtnSave_Click" Content="Save" Margin="0,0,5,0"/>
-                <Button x:Name="BtnLoad" Width="50" Click="BtnLoad_Click" Content="Load" Margin="0,0,5,0"/>
-                <Button x:Name="BtnAddJob" Width="50" Click="BtnAddJob_Click" Content="Add Job" Margin="0,0,5,0"/>
-                <Button x:Name="BtnRemoveJob" Width="75" Click="BtnRemoveJob_Click" Content="Remove Job"/>
+                <Button x:Name="BtnSave" Width="50" Command="{Binding SaveCommand}" Content="Save" Margin="0,0,5,0"/>
+                <Button x:Name="BtnLoad" Width="50" Command="{Binding LoadCommand}" Content="Load" Margin="0,0,5,0"/>
+                <Button x:Name="BtnAddJob" Width="50" Command="{Binding AddJobCommand}" Content="Add Job" Margin="0,0,5,0"/>
+                <Button x:Name="BtnRemoveJob" Width="75" Command="{Binding RemoveJobCommand}" Content="Remove Job"/>
             </WrapPanel>
         </Grid>
 
         <!--This is where the info about the job lives-->
-        <Grid Grid.Column="1" Grid.RowSpan="2" Margin="10" Background="CornflowerBlue">
+        <Grid Grid.Column="1" Grid.RowSpan="2" Margin="10" Background="CornflowerBlue" DataContext="{Binding SelectedJob}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -78,34 +77,23 @@
             </Grid.ColumnDefinitions>
 
             <!--Right Side Top Row (Label, Company name and Title-->
-            <Label x:Name="compoundTitle" FontSize="14" Content="{Binding ElementName=jobList,
-                Path=SelectedValue.compoundTitle, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            <Label x:Name="compoundTitle" FontSize="14" Content="{Binding compoundTitle}"
                    Grid.ColumnSpan="2"/>
 
             <StackPanel Grid.Row="1">
                 <Label Content="Company Name"/>
-                <TextBox x:Name="companyName" TextChanged="JobCompany_TextChanged"
-                         LostKeyboardFocus="JobCompany_LostKeyboardFocus" GotKeyboardFocus="JobCompany_GotKeyboardFocus">
-                    <TextBox.Text>
-                        <Binding ElementName="jobList"  Path="SelectedValue.companyName" UpdateSourceTrigger="PropertyChanged"/>
-                    </TextBox.Text>
-                </TextBox>
+                <TextBox x:Name="companyName" Text="{Binding companyName}"/>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="1" >
                 <Label Content="Job Title"/>
-                <TextBox x:Name="jobTitle" TextChanged="JobCompany_TextChanged" LostKeyboardFocus="JobCompany_LostKeyboardFocus"
-                         GotKeyboardFocus="JobCompany_GotKeyboardFocus">
-                    <TextBox.Text>
-                        <Binding ElementName="jobList"  Path="SelectedValue.jobTitle" UpdateSourceTrigger="PropertyChanged"/>
-                    </TextBox.Text>
-                </TextBox>
+                <TextBox x:Name="jobTitle" Text="{Binding jobTitle}"/>
             </StackPanel>
 
             <!--Right Side Second Row (URL)-->
             <StackPanel Grid.Row="2" Margin="5,0,5,0">
                 <Label Content="URL of Listing"/>
-                <TextBox x:Name="URL" Text="{Binding ElementName=jobList,Path=SelectedValue.URL}" HorizontalAlignment="Left" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"/>
+                <TextBox x:Name="URL" Text="{Binding URL}" HorizontalAlignment="Left" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"/>
             </StackPanel>
 
             <!--Right Side Second Row (Status and Dates)-->
@@ -114,53 +102,45 @@
                 <!--Checkboxes & Contact info on left side-->
                 <Label Content="Status"/>
                 <StackPanel>
-                    <CheckBox x:Name="found" IsChecked="{Binding ElementName=jobList,Path=SelectedValue.found}"
-                              Content="Found" Click="statusCheckBox_Click"/>
-                    <CheckBox x:Name="researched" IsChecked="{Binding ElementName=jobList,Path=SelectedValue.researched}"
-                              Content="Researched" Click="statusCheckBox_Click"/>
-                    <CheckBox x:Name="coverLetter" Content="Cover Letter Written" Click="statusCheckBox_Click"
-                              IsChecked="{Binding ElementName=jobList,Path=SelectedValue.coverLetter}"/>
-                    <CheckBox x:Name="resume" Content="Resume Written" Click="statusCheckBox_Click"
-                              IsChecked="{Binding ElementName=jobList,Path=SelectedValue.resume}"/>
-                    <CheckBox x:Name="applied" Content="Applied" Click="statusCheckBox_Click"
-                              IsChecked="{Binding ElementName=jobList,Path=SelectedValue.applied}"/>
-                    <CheckBox x:Name="interviewing" Content="Interviewing" Click="statusCheckBox_Click"
-                              IsChecked="{Binding ElementName=jobList,Path=SelectedValue.interviewing}"/>
+                    <CheckBox x:Name="found" IsChecked="{Binding found}"/>
+                    <CheckBox x:Name="researched" IsChecked="{Binding researched}"/>
+                        <CheckBox x:Name="coverLetter" Content="Cover Letter Written"/>
+                    <CheckBox x:Name="resume" IsChecked="{Binding resume}"/>
+                    <CheckBox x:Name="applied" 
+                              IsChecked="{Binding applied}"/>
+                    <CheckBox x:Name="interviewing"
+                              IsChecked="{Binding interviewing}"/>
                 </StackPanel>
 
                 <Label Content="Final Status"/>
                 <WrapPanel>
-                    <RadioButton x:Name="pending" Content="Pending" Click="statusCheckBox_Click"
-                              IsChecked="{Binding ElementName=jobList,Path=SelectedValue.pending}"/>
-                    <RadioButton x:Name="accepted" Content="Accepted" Click="statusCheckBox_Click"
-                              IsChecked="{Binding ElementName=jobList,Path=SelectedValue.accepted}"/>
-                    <RadioButton x:Name="rejected" Content="Rejected" Click="statusCheckBox_Click"
-                              IsChecked="{Binding ElementName=jobList,Path=SelectedValue.rejected}"/>
+                    <RadioButton x:Name="pending" Content="Pending"
+                              IsChecked="{Binding pending}"/>
+                    <RadioButton x:Name="accepted" Content="Accepted"
+                              IsChecked="{Binding accepted}"/>
+                    <RadioButton x:Name="rejected" Content="Rejected"
+                              IsChecked="{Binding rejected}"/>
                 </WrapPanel>
 
                 <Label Content="Contact"/>
-                <TextBox x:Name="contactInfo" Text="{Binding ElementName=jobList,Path=SelectedValue.contactInfo}"/>
+                <TextBox x:Name="contactInfo" Text="{Binding contactInfo}"/>
 
             </StackPanel>
 
             <!--Dates on right side-->
             <StackPanel x:Name="stackPanelDate" Grid.Column="1" Grid.Row="3">
                 <Label Content="Date Located"/>
-                <DatePicker x:Name="dateLocated" GotFocus="DatePicker_GotFocus"
-                            SelectedDateChanged="DatePicker_SelectedDateChanged"
-                            SelectedDate="{Binding ElementName=jobList,Path=SelectedValue.dateLocated}"/>
+                <DatePicker x:Name="dateLocated" 
+                            SelectedDate="{Binding dateLocated}"/>
                 <Label Content="Date Materials Finished"/>
-                <DatePicker x:Name="dateMaterialsFinished" GotFocus="DatePicker_GotFocus"
-                            SelectedDateChanged="DatePicker_SelectedDateChanged"
-                            SelectedDate="{Binding ElementName=jobList,Path=SelectedValue.dateMaterialsFinished}"/>
+                <DatePicker x:Name="dateMaterialsFinished" 
+                            SelectedDate="{Binding dateMaterialsFinished}"/>
                 <Label Content="Date Applied"/>
-                <DatePicker x:Name="dateApplied" GotFocus="DatePicker_GotFocus"
-                            SelectedDateChanged="DatePicker_SelectedDateChanged"
-                            SelectedDate="{Binding ElementName=jobList,Path=SelectedValue.dateApplied}"/>
+                <DatePicker x:Name="dateApplied" 
+                            SelectedDate="{Binding dateApplied}"/>
                 <Label Content="Next Steps"/>
-                <DatePicker x:Name="dateNextSteps" GotFocus="DatePicker_GotFocus"
-                            SelectedDateChanged="DatePicker_SelectedDateChanged"
-                            SelectedDate="{Binding ElementName=jobList,Path=SelectedValue.dateNextSteps}"/>
+                <DatePicker x:Name="dateNextSteps"
+                            SelectedDate="{Binding dateNextSteps}"/>
             </StackPanel>
 
             <!-- Notes -->
@@ -169,7 +149,7 @@
                 <TextBox Margin="5,0,5,5" x:Name="notes"  VerticalScrollBarVisibility="Auto"
                          SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto"
                          ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"
-                         Text="{Binding ElementName=jobList,Path=SelectedValue.notes}"/>
+                         Text="{Binding notes}"/>
             </DockPanel>
         </Grid>
     </Grid>

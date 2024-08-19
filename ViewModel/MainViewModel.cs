@@ -48,140 +48,56 @@ namespace JobTracker.ViewModel
         private SelectedDatesCollection _selectedDates;
 
         //commands
-        public ICommand	SaveCommand { get; set; }
-		public ICommand	LoadCommand { get; set; }
-		public ICommand	AddJobCommand { get; set; }
-		public ICommand	RemoveJobCommand { get; set; }
+        public ICommand	SaveCommand { get; }
+		public ICommand	LoadCommand { get;}
+		public ICommand	AddJobCommand { get; }
+		public ICommand	RemoveJobCommand { get; }
 
 		public MainViewModel()
 		{
             _jobDatabase = JobManager.GetJobs();
             Jobs = _jobDatabase;
 
-            SaveCommand = new RelayCommand(Save, CanSave);
-			LoadCommand = new RelayCommand(Load, CanLoad);
-			AddJobCommand = new RelayCommand(AddJob, CanAddJob);
-			RemoveJobCommand = new RelayCommand(RemoveJob, CanRemoveJob);
+            SaveCommand = new SaveCommand(this);
+            LoadCommand = new LoadCommand(this);
+            AddJobCommand = new AddJobCommand(this);
+			RemoveJobCommand = new RemoveJobCommand(this);
 		}
-        private void Save(object obj)
-        {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ObservableCollection<Job>));
-
-            SaveFileDialog dialog = new SaveFileDialog()
-            {
-                Filter = "XML Files(*.xml)|*.xml|All(*.*)|*"
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                Tools.WriteToXmlFile<ObservableCollection<Job>>(dialog.FileName, _jobDatabase);
-                lastSaveTime = DateTime.Now;
-            }
-        }
-
-        private bool CanSave(object obj)
-        {
-            return _jobDatabase.Count > 0;
-        }
-       
-        private void Load(object obj)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-            {
-                //make sure we actually are loading a valid file
-                var loadedJobs = Tools.ReadFromXmlFile<ObservableCollection<Job>>(openFileDialog.FileName);
-                if (loadedJobs.Count > 0)
-                {
-                    //clear our old jobs and re-add them so we don't break the data binding
-                    _jobDatabase.Clear();
-                    foreach (var job in loadedJobs)
-                    {
-                        _jobDatabase.Add(job);
-                    }
-                    currentSelectionIndex = 0;
-                }
-                else
-                {
-                    MessageBox.Show("Error - Unable to load file");
-                }
-            }
-        }
-
-        private bool CanLoad(object obj)
-        {
-            return true;
-        }
-
-        private void AddJob(object obj)
-        {
-            _jobDatabase.Add(new Job());
-            currentSelectionIndex = _jobDatabase.Count - 1;
-        }
-       
-        private bool CanAddJob(object obj)
-        {
-            return true;
-        }
-
-        private void RemoveJob(object obj)
-        {
-            if (_jobDatabase.Count == 1)
-            {
-                MessageBox.Show("You can't remove your last job");
-            }
-            else if (MessageBox.Show("Are you sure you want to remove this job?", "Remove Job?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                var initialSelectedIndex = currentSelectionIndex;
-                if (initialSelectedIndex == _jobDatabase.Count - 1)
-                {
-                    currentSelectionIndex--;
-                }
-
-                _jobDatabase.RemoveAt(initialSelectedIndex);
-            }
-        }
-
-        private bool CanRemoveJob(object obj)
-        {
-            return _jobDatabase.Count > 1;
-        }
 
         //old stuff
-        private int currentSelectionIndex = 0;
+        private int _currentSelectionIndex;
+        public int CurrentSelectionIndex
+        {
+            get
+            {
+                return _currentSelectionIndex;
+            }
+            set
+            {
+                _currentSelectionIndex = value;
+                OnPropertyChanged(nameof(CurrentSelectionIndex));
+            }
+        }
 
         Data.Date dateInfo = new Data.Date();
         DateTime? currentSelectedDate = DateTime.Now;
 
-        private DateTime lastSaveTime = DateTime.MinValue;
+
         private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
 
-
-
-        #region XAML Events
-
-        /*
-        /// <summary>
-        /// Called when the user goes into the Job or Company boxes.
-        /// Clears out the text box if it has the default string, making it easier to type the desires string
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void JobCompany_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        private DateTime _lastSaveTime = DateTime.MinValue;
+        public DateTime LastSaveTime
         {
-            if (sender == jobTitle && jobTitle.Text == Job.c_JOBTITLE)
+            get
             {
-                jobTitle.Text = string.Empty;
+                return _lastSaveTime;
             }
-            else if (sender == companyName && companyName.Text == Job.c_COMPANY)
+            set
             {
-                companyName.Text = string.Empty;
+                _lastSaveTime = value;
             }
         }
-        */
 
-
-        /// <summary>
         /// Called when the user updates the job name or company name fields
         /// Updates the title at the top of the screen as they type
         /// </summary>
@@ -192,68 +108,6 @@ namespace JobTracker.ViewModel
             UpdateCompoundTitle();
         }
 
-        /*
-        /// <summary>
-        /// Called when the user exits either the job or company boxes.
-        /// If the box is blank it fills the default value back in
-        /// It also stores the current information to make sure the name in the list box is accurate
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void JobCompany_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            if (sender == jobTitle && jobTitle.Text == string.Empty)
-            {
-                jobTitle.Text = Job.c_JOBTITLE;
-            }
-            else if (sender == companyName && companyName.Text == string.Empty)
-            {
-                companyName.Text = Job.c_COMPANY;
-            }
-
-            UpdateCompoundTitle();
-        }
-        */
-
-        /// <summary>
-        /// Triggers when the user clicks the Add Job Button
-        /// Adds a new job to the list and makes it the selected item
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnAddJob_Click(object sender, RoutedEventArgs e)
-        {
-
-            _jobDatabase.Add(new Job());
-            currentSelectionIndex = _jobDatabase.Count - 1;
-        }
-
-        /// <summary>
-        /// Triggers when the user clicks the Remove Job button.
-        /// Removes the selected job from the list and selects the next job in the list.
-        /// Ensures the user doesn't remove their last job
-        /// and that they don't get an out of index exception
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BtnRemoveJob_Click(object sender, RoutedEventArgs e)
-        {
-            if (_jobDatabase.Count == 1)
-            {
-                MessageBox.Show("You can't remove your last job");
-            }
-            else if (MessageBox.Show("Are you sure you want to remove this job?", "Remove Job?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                var initialSelectedIndex = currentSelectionIndex;
-                if (initialSelectedIndex == _jobDatabase.Count - 1)
-                {
-                    currentSelectionIndex--;
-                }
-
-                _jobDatabase.RemoveAt(initialSelectedIndex);
-            }
-        }
-
         /// <summary>
         /// Encourages the user to save if they have not done so recently
         /// </summary>
@@ -261,7 +115,7 @@ namespace JobTracker.ViewModel
         /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var timeSinceSave = DateTime.Now.Subtract(lastSaveTime).TotalSeconds;
+            var timeSinceSave = DateTime.Now.Subtract(_lastSaveTime).TotalSeconds;
             if (timeSinceSave > c_TIMEBETWEENSAVEREMINDERS)
             {
                 string warningMessage;
@@ -328,7 +182,6 @@ namespace JobTracker.ViewModel
         {
             UpdateCalendar();
         }
-        #endregion
 
         #region Helper Methods
         /// <summary>
@@ -366,7 +219,7 @@ namespace JobTracker.ViewModel
             //make sure count is greater than 0 so there aren't issues when loading in files
             if (_jobDatabase.Count > 0)
             {
-                _jobDatabase[currentSelectionIndex].UpdateCompoundTitle();
+                _jobDatabase[_currentSelectionIndex].UpdateCompoundTitle();
             }
         }
         #endregion

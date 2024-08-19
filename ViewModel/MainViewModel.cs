@@ -54,12 +54,12 @@ namespace JobTracker.ViewModel
 
 		public MainViewModel()
 		{
-            foreach (Job job in JobManager.GetJobs())
+            if (JobManager.JobCount() == 0)
             {
-                _jobDatabase.Add(new JobViewModel(job));
+                JobManager.AddNewJob();
             }
 
-            Jobs = _jobDatabase;
+            RefreshJobs();
 
             SaveCommand = new SaveCommand(this);
             LoadCommand = new LoadCommand(this);
@@ -67,9 +67,10 @@ namespace JobTracker.ViewModel
 			RemoveJobCommand = new RemoveJobCommand(this);
 		}
 
-        public void Refresh()
+        public void RefreshJobs()
         {
             _jobDatabase.Clear();
+
             foreach (Job job in JobManager.GetJobs())
             {
                 _jobDatabase.Add(new JobViewModel(job));

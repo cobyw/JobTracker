@@ -21,7 +21,7 @@ namespace JobTracker.Commands
 
         public override bool CanExecute(object parameter)
         {
-            return JobManager.GetJobs().Count > 0;
+            return JobManager.JobCount() > 0;
         }
 
         public override void Execute(object parameter)

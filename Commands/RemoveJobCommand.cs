@@ -18,25 +18,24 @@ namespace JobTracker.Commands
 
         public override bool CanExecute(object parameter)
         {
-            return JobManager.GetJobs().Count > 1;
+            return JobManager.JobCount() > 1;
         }
 
         public override void Execute(object parameter)
         {
-            if (JobManager.GetJobs().Count == 1)
+            if (JobManager.JobCount() == 1)
             {
                 MessageBox.Show("You can't remove your last job");
             }
             else if (MessageBox.Show("Are you sure you want to remove this job?", "Remove Job?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 var initialSelectedIndex = _mainViewModel.CurrentSelectionIndex;
-                if (initialSelectedIndex == JobManager.GetJobs().Count - 1)
-                {
-                    _mainViewModel.CurrentSelectionIndex--;
-                }
+
+                var newSelectionIndex = initialSelectedIndex == JobManager.JobCount() - 1 ? initialSelectedIndex - 1 : initialSelectedIndex;
 
                 JobManager.RemoveJobAtIndex(initialSelectedIndex);
-                _mainViewModel.Refresh();
+                _mainViewModel.RefreshJobs();
+                _mainViewModel.CurrentSelectionIndex = newSelectionIndex;
             }
         }
 

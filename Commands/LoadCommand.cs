@@ -37,6 +37,7 @@ namespace JobTracker.Commands
                         JobManager.AddJob(job);
                     }
                     _mainViewModel.CurrentSelectionIndex = 0;
+                    _mainViewModel.Refresh();
                 }
                 else
                 {

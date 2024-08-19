@@ -5,25 +5,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JobTracker.Data;
+using System.Runtime;
+using static JobTracker.Data.Job;
+using System.ComponentModel;
 
 namespace JobTracker.ViewModel
 {
     public class JobViewModel : ViewModelBase
     {
 
+        public JobViewModel(Job job) {
+            _job = job;
+        }
+
         private readonly Job _job;
 
-        //properties
-        public string CompanyName
+        public string CompoundTitle
         {
-            get
-            {
-                return _job.companyName;
-            }
-            set
-            {
+            get => string.Format("{0} - {1} - {2}", _job.companyName, _job.jobTitle, GetStatusString(_job.Status));
+        }
+
+    //properties
+        public string CompanyName
+    {
+        get
+        {
+            return _job.companyName;
+        }
+        set
+        {
                 _job.companyName = value;
                 OnPropertyChanged(nameof(CompanyName));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
@@ -37,10 +50,11 @@ namespace JobTracker.ViewModel
             {
                 _job.jobTitle = value;
                 OnPropertyChanged(nameof(JobTitle));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
-        public string URLOfListing
+        public string URL
         {
             get
             {
@@ -49,7 +63,7 @@ namespace JobTracker.ViewModel
             set
             {
                 _job.URL = value;
-                OnPropertyChanged(nameof(URLOfListing));
+                OnPropertyChanged(nameof(URL));
             }
         }
 
@@ -63,6 +77,7 @@ namespace JobTracker.ViewModel
             {
                 _job.found = value;
                 OnPropertyChanged(nameof(Found));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
@@ -77,10 +92,11 @@ namespace JobTracker.ViewModel
             {
                 _job.researched = value;
                 OnPropertyChanged(nameof(Researched));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
-        public bool CoverLetterWritten
+        public bool CoverLetter
         {
             get
             {
@@ -89,11 +105,12 @@ namespace JobTracker.ViewModel
             set
             {
                 _job.coverLetter = value;
-                OnPropertyChanged(nameof(CoverLetterWritten));
+                OnPropertyChanged(nameof(CoverLetter));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
-        public bool ResumeWritten
+        public bool Resume
         {
             get
             {
@@ -102,7 +119,8 @@ namespace JobTracker.ViewModel
             set
             {
                 _job.resume = value;
-                OnPropertyChanged(nameof(ResumeWritten));
+                OnPropertyChanged(nameof(Resume));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
@@ -116,6 +134,7 @@ namespace JobTracker.ViewModel
             {
                 _job.applied = value;
                 OnPropertyChanged(nameof(Applied));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
         public bool Interviewing
@@ -128,6 +147,7 @@ namespace JobTracker.ViewModel
             {
                 _job.interviewing = value;
                 OnPropertyChanged(nameof(Interviewing));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
@@ -170,7 +190,7 @@ namespace JobTracker.ViewModel
             }
         }
 
-        public string Contact
+        public string ContactInfo
         {
             get
             {
@@ -179,7 +199,7 @@ namespace JobTracker.ViewModel
             set
             {
                 _job.contactInfo = value;
-                OnPropertyChanged(nameof(Contact));
+                OnPropertyChanged(nameof(ContactInfo));
             }
         }
 

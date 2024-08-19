@@ -45,6 +45,7 @@ namespace JobTracker.Commands
                 }
 
                 JobManager.RemoveJobAtIndex(initialSelectedIndex);
+                _mainViewModel.Refresh();
             }
         }
 

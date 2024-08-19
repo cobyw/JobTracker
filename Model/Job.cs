@@ -14,6 +14,8 @@ using System.Data;
 using static JobTracker.Data.Date.ChangeData;
 using static JobTracker.Data.Date;
 using System.Collections.ObjectModel;
+using System.Security.RightsManagement;
+using System.Runtime;
 
 
 namespace JobTracker.Data
@@ -24,7 +26,7 @@ namespace JobTracker.Data
         public const string c_JOBTITLE = "Job";
         public const string c_COMPANY = "Company";
 
-        public enum Status
+        public enum JobStatus
         { 
             Empty, //0
             Reasearching, //1
@@ -38,20 +40,28 @@ namespace JobTracker.Data
         /// <summary>
         /// A nicely formated dictionary of the statuses
         /// </summary>
-        private static Dictionary<Status, string> statusDictionary = new Dictionary<Status, string>()
+        private static Dictionary<JobStatus, string> _statusDictionary = new Dictionary<JobStatus, string>()
             {
-            {Status.Reasearching, "Researching" },
-            {Status.WorkingOnMaterials, "Working On Materials" },
-            {Status.Applied, "Applied" },
-            {Status.Interviewing, "Interviewing" },
-            {Status.Rejected, "Rejected" },
-            {Status.Accepted, "Accepted" },
-            {Status.Empty, "" },
+            {JobStatus.Reasearching, "Researching" },
+            {JobStatus.WorkingOnMaterials, "Working On Materials" },
+            {JobStatus.Applied, "Applied" },
+            {JobStatus.Interviewing, "Interviewing" },
+            {JobStatus.Rejected, "Rejected" },
+            {JobStatus.Accepted, "Accepted" },
+            {JobStatus.Empty, "" },
             };
 
 
-        public Status status { get; set; }
-        public string compoundTitle { get; set; }
+        /// <summary>
+        /// Translates a status enum into a nicely formatted string
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public static string GetStatusString(JobStatus status)
+        {
+            return _statusDictionary[status];
+        }
+
         //main info
         public string jobTitle { get; set; }
         public string companyName { get; set; }
@@ -92,84 +102,63 @@ namespace JobTracker.Data
             rejected = false;
             pending = true;
 
-            status = GetStatus(this);
-
-            compoundTitle = GetCompoundTitle(this, includeStatus:true);
-
             contactInfo = "";
             notes = string.Empty;
         }
 
+        /*
         /// <summary>
         /// Returns the compound title of the current job including the company name, job title
         /// </summary>
         /// <param name="jobInfo">The job title whose title is being requested</param>
         /// <param name="includeStatus">Status is appended to the end of the title when true</param>
         /// <returns></returns>
-        public static string GetCompoundTitle(Job jobInfo, bool includeStatus = true)
+        public string GetCompoundTitle(bool includeStatus = true)
         {
             if (includeStatus)
             {
-                return string.Format("{0} - {1} - {2}", jobInfo.companyName, jobInfo.jobTitle, GetStatusString(GetStatus(jobInfo)));
+                return string.Format("{0} - {1} - {2}", companyName, jobTitle, GetStatusString(Status));
             }
             else
             {
-                return string.Format("{0} - {1}", jobInfo.companyName, jobInfo.jobTitle);
+                return string.Format("{0} - {1}", companyName, jobTitle);
             }
         }
+        */
 
-        /// <summary>
-        /// Updates the stored compound title
-        /// </summary>
-        public void UpdateCompoundTitle()
+        public JobStatus Status
         {
-            compoundTitle = GetCompoundTitle(this);
-        }
+            get
+            {
+                var status = new JobStatus();
+                if (accepted)
+                {
+                    status = JobStatus.Accepted;
+                }
+                else if (rejected)
+                {
+                    status = JobStatus.Rejected;
+                }
+                else if (interviewing)
+                {
+                    status = JobStatus.Interviewing;
+                }
+                else if (applied)
+                {
+                    status = JobStatus.Applied;
+                }
+                else if (researched || coverLetter || resume)
+                {
+                    status = JobStatus.WorkingOnMaterials;
+                }
+                else
+                {
+                    status = JobStatus.Reasearching;
+                }
 
-        /// <summary>
-        /// Returns the status of the job based on current boxes checked
-        /// </summary>
-        /// <param name="jobInfo"></param>
-        /// <returns></returns>
-        private static Status GetStatus(Job jobInfo)
-        {
-            var status = new Status();
-            if (jobInfo.accepted)
-            {
-                status = Status.Accepted;
-            }
-            else if (jobInfo.rejected)
-            {
-                status = Status.Rejected;
-            }
-            else if (jobInfo.interviewing)
-            {
-                status = Status.Interviewing;
-            }
-            else if (jobInfo.applied)
-            {
-                status = Status.Applied;
-            }
-            else if (jobInfo.researched || jobInfo.coverLetter || jobInfo.resume)
-            {
-                status = Status.WorkingOnMaterials;
-            }
-            else
-            {
-                status = Status.Reasearching;
-            }
+                return status;
+            } 
 
-            return status;
-        }
-
-        /// <summary>
-        /// Translates a status enum into a nicely formatted string
-        /// </summary>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        static private string GetStatusString(Status status)
-        {
-            return statusDictionary[status];
         }
     }
 }

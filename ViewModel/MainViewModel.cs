@@ -13,21 +13,30 @@ using JobTracker.Data;
 using JobTracker.Utilities;
 using Microsoft.Win32;
 using System.Diagnostics;
+using System.ComponentModel;
 
 namespace JobTracker.ViewModel
 {
 	public class MainViewModel : ViewModelBase
 	{
 
-        private ObservableCollection<Job> _jobDatabase;
+        private ObservableCollection<JobViewModel> _jobDatabase = new ObservableCollection<JobViewModel>();
 
-        public IEnumerable<Job> Jobs { get; set; }
+        public IEnumerable<JobViewModel> Jobs { get; set; }
 
-        private Job _selectedJob;
-        public Job SelectedJob
+
+        private JobViewModel _selectedJob;
+        public JobViewModel SelectedJob
         {
-            get { return _selectedJob; }
-            set{ _selectedJob = value; }
+            get
+            {
+                return _selectedJob;
+            }
+            set
+            {
+                _selectedJob = value;
+                OnPropertyChanged(nameof(SelectedJob));
+            }
         }
 
         private Date _selectedDate;
@@ -55,7 +64,11 @@ namespace JobTracker.ViewModel
 
 		public MainViewModel()
 		{
-            _jobDatabase = JobManager.GetJobs();
+            foreach (Job job in JobManager.GetJobs())
+            {
+                _jobDatabase.Add(new JobViewModel(job));
+            }
+
             Jobs = _jobDatabase;
 
             SaveCommand = new SaveCommand(this);
@@ -63,6 +76,17 @@ namespace JobTracker.ViewModel
             AddJobCommand = new AddJobCommand(this);
 			RemoveJobCommand = new RemoveJobCommand(this);
 		}
+
+        public void Refresh()
+        {
+            _jobDatabase.Clear();
+            foreach (Job job in JobManager.GetJobs())
+            {
+                _jobDatabase.Add(new JobViewModel(job));
+            }
+
+            Jobs = _jobDatabase;
+        }
 
         //old stuff
         private int _currentSelectionIndex;
@@ -98,6 +122,7 @@ namespace JobTracker.ViewModel
             }
         }
 
+        /*
         /// Called when the user updates the job name or company name fields
         /// Updates the title at the top of the screen as they type
         /// </summary>
@@ -107,6 +132,7 @@ namespace JobTracker.ViewModel
         {
             UpdateCompoundTitle();
         }
+        */
 
         /// <summary>
         /// Encourages the user to save if they have not done so recently
@@ -151,6 +177,7 @@ namespace JobTracker.ViewModel
             }
         }
 
+        /*
         /// <summary>
         /// Called whenever the user ticks or unticks any of the status checkboxes.
         /// Ensures the title is up to date with the current combined status
@@ -161,6 +188,7 @@ namespace JobTracker.ViewModel
         {
             UpdateCompoundTitle();
         }
+        */
 
         /// <summary>
         /// Called when the calender is updated.
@@ -192,7 +220,7 @@ namespace JobTracker.ViewModel
         private void UpdateCalendar()
         {
 
-            foreach (DateTime date in dateInfo.GetDatesOfInterest(_jobDatabase))
+            foreach (DateTime date in dateInfo.GetDatesOfInterest(JobManager.GetJobs()))
             {
                 _selectedDates.Add(date);
             }
@@ -216,11 +244,13 @@ namespace JobTracker.ViewModel
         /// </summary>
         private void UpdateCompoundTitle()
         {
+           /*
             //make sure count is greater than 0 so there aren't issues when loading in files
             if (_jobDatabase.Count > 0)
             {
                 _jobDatabase[_currentSelectionIndex].UpdateCompoundTitle();
             }
+           */
         }
         #endregion
     }

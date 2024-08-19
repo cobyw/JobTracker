@@ -20,6 +20,7 @@ namespace JobTracker.Commands
         public override void Execute(object parameter)
         {
             JobManager.AddNewJob();
+            _mainViewModel.Refresh();
             _mainViewModel.CurrentSelectionIndex = JobManager.JobCount() - 1;
         }
     }

@@ -33,7 +33,7 @@
                 <Label DockPanel.Dock="Top" Content="Jobs"/>
                 <ListBox x:Name="_jobDatabase" HorizontalContentAlignment="Stretch"
                      VerticalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True" ItemsSource="{Binding Jobs}"
-                     DisplayMemberPath="compoundTitle" SelectedItem="{Binding SelectedJob}"/>
+                     DisplayMemberPath="CompoundTitle" SelectedItem="{Binding SelectedJob}" SelectedIndex="{Binding CurrentSelectionIndex}"/>
             </DockPanel>
 
             <Viewbox Grid.Row="1">
@@ -77,17 +77,17 @@
             </Grid.ColumnDefinitions>
 
             <!--Right Side Top Row (Label, Company name and Title-->
-            <Label x:Name="compoundTitle" FontSize="14" Content="{Binding compoundTitle}"
+            <Label x:Name="compoundTitle" FontSize="14" Content="{Binding CompoundTitle}"
                    Grid.ColumnSpan="2"/>
 
             <StackPanel Grid.Row="1">
                 <Label Content="Company Name"/>
-                <TextBox x:Name="companyName" Text="{Binding companyName}"/>
+                <TextBox x:Name="companyName" Text="{Binding CompanyName}"/>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="1" >
                 <Label Content="Job Title"/>
-                <TextBox x:Name="jobTitle" Text="{Binding jobTitle}"/>
+                <TextBox x:Name="jobTitle" Text="{Binding JobTitle}"/>
             </StackPanel>
 
             <!--Right Side Second Row (URL)-->
@@ -102,28 +102,26 @@
                 <!--Checkboxes & Contact info on left side-->
                 <Label Content="Status"/>
                 <StackPanel>
-                    <CheckBox x:Name="found" IsChecked="{Binding found}"/>
-                    <CheckBox x:Name="researched" IsChecked="{Binding researched}"/>
-                        <CheckBox x:Name="coverLetter" Content="Cover Letter Written"/>
-                    <CheckBox x:Name="resume" IsChecked="{Binding resume}"/>
-                    <CheckBox x:Name="applied" 
-                              IsChecked="{Binding applied}"/>
-                    <CheckBox x:Name="interviewing"
-                              IsChecked="{Binding interviewing}"/>
+                    <CheckBox x:Name="found" IsChecked="{Binding Found}" Content="Found"/>
+                    <CheckBox x:Name="researched" IsChecked="{Binding Researched}" Content="Researched"/>
+                    <CheckBox x:Name="coverLetter" Content="Cover Letter Written" IsChecked="{Binding CoverLetter}"/>
+                    <CheckBox x:Name="resume" IsChecked="{Binding Resume}" Content="Resume Written"/>
+                    <CheckBox x:Name="applied" IsChecked="{Binding Applied}" Content="Applied"/>
+                    <CheckBox x:Name="interviewing" IsChecked="{Binding Interviewing}" Content="Interviewing"/>
                 </StackPanel>
 
                 <Label Content="Final Status"/>
                 <WrapPanel>
                     <RadioButton x:Name="pending" Content="Pending"
-                              IsChecked="{Binding pending}"/>
+                              IsChecked="{Binding Pending}"/>
                     <RadioButton x:Name="accepted" Content="Accepted"
-                              IsChecked="{Binding accepted}"/>
+                              IsChecked="{Binding Accepted}"/>
                     <RadioButton x:Name="rejected" Content="Rejected"
-                              IsChecked="{Binding rejected}"/>
+                              IsChecked="{Binding Rejected}"/>
                 </WrapPanel>
 
                 <Label Content="Contact"/>
-                <TextBox x:Name="contactInfo" Text="{Binding contactInfo}"/>
+                <TextBox x:Name="contactInfo" Text="{Binding ContactInfo}"/>
 
             </StackPanel>
 
@@ -131,16 +129,16 @@
             <StackPanel x:Name="stackPanelDate" Grid.Column="1" Grid.Row="3">
                 <Label Content="Date Located"/>
                 <DatePicker x:Name="dateLocated" 
-                            SelectedDate="{Binding dateLocated}"/>
+                            SelectedDate="{Binding DateLocated}"/>
                 <Label Content="Date Materials Finished"/>
                 <DatePicker x:Name="dateMaterialsFinished" 
-                            SelectedDate="{Binding dateMaterialsFinished}"/>
+                            SelectedDate="{Binding DateMaterialsFinished}"/>
                 <Label Content="Date Applied"/>
                 <DatePicker x:Name="dateApplied" 
-                            SelectedDate="{Binding dateApplied}"/>
+                            SelectedDate="{Binding DateApplied}"/>
                 <Label Content="Next Steps"/>
                 <DatePicker x:Name="dateNextSteps"
-                            SelectedDate="{Binding dateNextSteps}"/>
+                            SelectedDate="{Binding DateNextSteps}"/>
             </StackPanel>
 
             <!-- Notes -->
@@ -149,7 +147,7 @@
                 <TextBox Margin="5,0,5,5" x:Name="notes"  VerticalScrollBarVisibility="Auto"
                          SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto"
                          ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"
-                         Text="{Binding notes}"/>
+                         Text="{Binding Notes}"/>
             </DockPanel>
         </Grid>
     </Grid>

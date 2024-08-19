@@ -120,22 +120,22 @@ namespace JobTracker.Data
                 if (jobInfo.dateLocated != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateLocated ?? DateTime.MinValue,
-                        ChangeType.Located, Job.GetCompoundTitle(jobInfo, includeStatus: false)));
+                        ChangeType.Located, jobInfo.jobTitle));
                 }
                 if (jobInfo.dateMaterialsFinished != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateMaterialsFinished ?? DateTime.MinValue,
-                    ChangeType.MaterialsFinished, Job.GetCompoundTitle(jobInfo, includeStatus: false)));
+                    ChangeType.MaterialsFinished, jobInfo.jobTitle));
                 }
                 if (jobInfo.dateApplied != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateApplied ?? DateTime.MinValue,
-                    ChangeType.Applied, Job.GetCompoundTitle(jobInfo, includeStatus: false)));
+                    ChangeType.Applied, jobInfo.jobTitle));
                 }
                 if (jobInfo.dateNextSteps != null)
                 {
                     changeDatas.Add(new ChangeData(jobInfo.dateNextSteps ?? DateTime.MinValue,
-                    ChangeType.NextSteps, Job.GetCompoundTitle(jobInfo, includeStatus: false)));
+                    ChangeType.NextSteps, jobInfo.jobTitle));
                 }
             }
         }

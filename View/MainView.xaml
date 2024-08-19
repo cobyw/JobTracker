@@ -7,6 +7,21 @@
         mc:Ignorable="d"
         Title="Job Tracker" Height="550" Width="800" MinHeight="550" MinWidth="600">
         <!--Closing="Window_Closing"-->
+    <Window.Resources>
+        <Style x:Key="CalendarDayButtonStyle" TargetType="CalendarDayButton">
+            <Style.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding Converter="{StaticResource LookupConverter}">
+                            <Binding />
+                            <Binding Path="DataContext.Dates" RelativeSource="{RelativeSource AncestorType=Calendar}" />
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="Pink" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
     <Grid Background="HotPink">
         <Grid.RowDefinitions>
@@ -37,19 +52,15 @@
             </DockPanel>
 
             <Viewbox Grid.Row="1">
-                <Calendar x:Name="calendar" ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                          ToolTip="Click on a date for more information"
-                          SelectionMode="MultipleRange"
-                          >
-                </Calendar>
+                <Calendar SelectionMode="MultipleRange" CalendarDayButtonStyle="{DynamicResource CalendarDayButtonStyle}" SelectedDate="{Binding SelectedDate}"/>
             </Viewbox>
             <!-- Calendar Display Information -->
-            <DockPanel Grid.Row="2">
+            <DockPanel Grid.Row="2" DataContext="{Binding DateViewModel}">
                 <Label DockPanel.Dock="Top" Content="Calendar Info:"/>
                 <TextBox x:Name="calendarInfo"  Margin="10,0,5,5" VerticalScrollBarVisibility="Auto"
                          SpellCheck.IsEnabled="True" HorizontalAlignment="Stretch" Width="Auto"
                          ScrollViewer.CanContentScroll="True" VerticalAlignment="Stretch"
-                         IsReadOnly="True" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap"/>
+                         IsReadOnly="True" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" Text="{Binding Path=UpdatesOnDate, Mode=OneWay}"/>
             </DockPanel>
 
             <!-- Buttons -->

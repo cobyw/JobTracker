@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
+using System.Windows.Data;
 using System.Xml.Serialization;
 
 namespace JobTracker.Utilities
@@ -52,6 +54,21 @@ namespace JobTracker.Utilities
                 if (reader != null)
                     reader.Close();
             }
+        }
+    }
+
+    public class LookupConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var date = (DateTime)values[0];
+            var dates = values[1] as HashSet<DateTime>;
+            return dates.Contains(date);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

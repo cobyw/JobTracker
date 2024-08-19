@@ -29,8 +29,8 @@ namespace JobTracker.ViewModel
             }
         }
 
-        private Date _selectedDate;
-        public Date SelectedDate
+        private DateTime? _selectedDate;
+        public DateTime? SelectedDate
         {
             get
             {
@@ -39,12 +39,23 @@ namespace JobTracker.ViewModel
             set
             {
                 _selectedDate = value;
+                OnPropertyChanged(nameof(SelectedDate));
             }
         }
 
-        public string CurrentDateInfo { get; set; }
-
-        private SelectedDatesCollection _selectedDates;
+        private DateViewModel _dateViewModel;
+        public DateViewModel DateViewModel
+        {
+            get
+            {
+                return  _dateViewModel;
+            }
+            set
+            {
+                 _dateViewModel = value;
+                OnPropertyChanged(nameof(DateViewModel));
+            }
+        }
 
         //commands
         public ICommand	SaveCommand { get; }
@@ -60,6 +71,9 @@ namespace JobTracker.ViewModel
             }
 
             RefreshJobs();
+
+            _dateViewModel = new DateViewModel(this);
+            SelectedDate = DateTime.Now;
 
             SaveCommand = new SaveCommand(this);
             LoadCommand = new LoadCommand(this);
@@ -93,9 +107,6 @@ namespace JobTracker.ViewModel
                 OnPropertyChanged(nameof(CurrentSelectionIndex));
             }
         }
-
-        Model.Date dateInfo = new Model.Date();
-        DateTime? currentSelectedDate = DateTime.Now;
 
 
         private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
@@ -171,68 +182,8 @@ namespace JobTracker.ViewModel
         }
         */
 
-        /// <summary>
-        /// Called when the calender is updated.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void calendar_SelectedDatesChanged(object sender, SelectionChangedEventArgs e)
-        {
-            UpdateCalendar();
-        }
-
-        /// <summary>
-        /// Called whenever the user selects a date they have done something with the current job
-        /// Ensures the calendar is up to date with their new selection
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
-        {
-            UpdateCalendar();
-        }
-
         #region Helper Methods
-        /// <summary>
-        /// Updates the calendar to mark which dates have information.
-        /// We are using blackout dates instead of selections because they are
-        /// still selectable and remain when the user selects things.
-        /// </summary>
-        private void UpdateCalendar()
-        {
-
-            foreach (DateTime date in dateInfo.GetDatesOfInterest(JobManager.GetJobs()))
-            {
-                _selectedDates.Add(date);
-            }
-
-            UpdateCalendarInfo(currentSelectedDate);
-        }
-
-        /// <summary>
-        /// Updates the Calendar information box with the information for the selected day
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        private void UpdateCalendarInfo(DateTime? dateTime)
-        {
-            CurrentDateInfo = dateInfo.GetUpdatesOnDate(dateTime);
-        }
-
-        /// <summary>
-        /// Updates the title at the top of the screen to
-        /// reflect the current status, company title, and job title
-        /// Also refreshes UI to ensure the title in the List is correct
-        /// </summary>
-        private void UpdateCompoundTitle()
-        {
-           /*
-            //make sure count is greater than 0 so there aren't issues when loading in files
-            if (_jobDatabase.Count > 0)
-            {
-                _jobDatabase[_currentSelectionIndex].UpdateCompoundTitle();
-            }
-           */
-        }
+        
         #endregion
     }
 }

@@ -82,12 +82,12 @@
 
             <StackPanel Grid.Row="1">
                 <Label Content="Company Name"/>
-                <TextBox x:Name="companyName" Text="{Binding CompanyName}"/>
+                <TextBox x:Name="companyName" Text="{Binding CompanyName, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
 
             <StackPanel Grid.Row="1" Grid.Column="1" >
                 <Label Content="Job Title"/>
-                <TextBox x:Name="jobTitle" Text="{Binding JobTitle}"/>
+                <TextBox x:Name="jobTitle" Text="{Binding JobTitle, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
 
             <!--Right Side Second Row (URL)-->

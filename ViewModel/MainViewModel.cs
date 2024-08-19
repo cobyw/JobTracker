@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using JobTracker.Commands;
-using JobTracker.Data;
+using JobTracker.Model;
 using JobTracker.Utilities;
 using Microsoft.Win32;
 using System.Diagnostics;
@@ -103,7 +103,7 @@ namespace JobTracker.ViewModel
             }
         }
 
-        Data.Date dateInfo = new Data.Date();
+        Model.Date dateInfo = new Model.Date();
         DateTime? currentSelectedDate = DateTime.Now;
 
 
@@ -123,17 +123,6 @@ namespace JobTracker.ViewModel
         }
 
         /*
-        /// Called when the user updates the job name or company name fields
-        /// Updates the title at the top of the screen as they type
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void JobCompany_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            UpdateCompoundTitle();
-        }
-        */
-
         /// <summary>
         /// Encourages the user to save if they have not done so recently
         /// </summary>
@@ -161,6 +150,7 @@ namespace JobTracker.ViewModel
                 }
             }
         }
+        */
 
         /// <summary>
         /// Called when the user begins to select a date

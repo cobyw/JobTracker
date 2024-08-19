@@ -9,16 +9,16 @@ using System.Windows.Markup;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Windows.Controls;
-using static JobTracker.Data.Job;
+using static JobTracker.Model.Job;
 using System.Data;
-using static JobTracker.Data.Date.ChangeData;
-using static JobTracker.Data.Date;
+using static JobTracker.Model.Date.ChangeData;
+using static JobTracker.Model.Date;
 using System.Collections.ObjectModel;
 using System.Security.RightsManagement;
 using System.Runtime;
 
 
-namespace JobTracker.Data
+namespace JobTracker.Model
 {
     [Serializable]
     public class Job

@@ -1,4 +1,4 @@
-﻿using JobTracker.Data;
+﻿using JobTracker.Model;
 using JobTracker.Utilities;
 using JobTracker.ViewModel;
 using Microsoft.Win32;

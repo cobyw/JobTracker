@@ -1,4 +1,4 @@
-﻿using JobTracker.Data;
+﻿using JobTracker.Model;
 using JobTracker.ViewModel;
 using System;
 using System.Collections.Generic;

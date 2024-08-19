@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static JobTracker.Data.Date.ChangeData;
+using static JobTracker.Model.Date.ChangeData;
 
-namespace JobTracker.Data
+namespace JobTracker.Model
 {
     public class Date
     {

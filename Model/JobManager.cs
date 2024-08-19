@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JobTracker.Data
+namespace JobTracker.Model
 {
     public class JobManager
     {

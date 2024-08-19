@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml.Serialization;
 using JobTracker.Commands;
 using JobTracker.Model;
-using JobTracker.Utilities;
-using Microsoft.Win32;
-using System.Diagnostics;
-using System.ComponentModel;
 
 namespace JobTracker.ViewModel
 {
-	public class MainViewModel : ViewModelBase
+    public class MainViewModel : ViewModelBase
 	{
 
         private ObservableCollection<JobViewModel> _jobDatabase = new ObservableCollection<JobViewModel>();

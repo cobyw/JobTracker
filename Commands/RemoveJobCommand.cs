@@ -1,16 +1,7 @@
 ﻿using JobTracker.Model;
-using JobTracker.Utilities;
 using JobTracker.ViewModel;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Serialization;
 
 namespace JobTracker.Commands
 {

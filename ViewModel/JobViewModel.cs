@@ -1,13 +1,5 @@
 ﻿using JobTracker.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JobTracker.Model;
-using System.Runtime;
 using static JobTracker.Model.Job;
-using System.ComponentModel;
 
 namespace JobTracker.ViewModel
 {

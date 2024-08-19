@@ -1,26 +1,4 @@
-﻿using JobTracker.Model;
-using System;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Win32;
-using System.IO;
-using System.Xml.Serialization;
-using JobTracker.Utilities;
-using System.Xml.Linq;
-using System.Diagnostics;
-using System.Windows.Controls.Primitives;
-using System.Reflection;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Collections.ObjectModel;
-using System.Printing;
+﻿using System.Windows;
 using JobTracker.ViewModel;
 
 namespace JobTracker.View

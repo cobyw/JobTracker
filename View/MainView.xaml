@@ -52,7 +52,7 @@
                 <Label DockPanel.Dock="Top" Content="Jobs"/>
                 <ListBox x:Name="_jobDatabase" HorizontalContentAlignment="Stretch"
                      VerticalContentAlignment="Stretch" ScrollViewer.CanContentScroll="True" ItemsSource="{Binding Jobs}"
-                     DisplayMemberPath="CompoundTitle" SelectedItem="{Binding SelectedJob}" SelectedIndex="{Binding CurrentSelectionIndex}" Focusable="False"/>
+                     DisplayMemberPath="CompoundTitle" SelectedItem="{Binding SelectedJob}" SelectedIndex="{Binding CurrentSelectionIndex}"/>
             </DockPanel>
 
             <Viewbox Grid.Row="1">

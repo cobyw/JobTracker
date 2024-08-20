@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Windows.Input;
 
 namespace JobTracker.ViewModel
 {
@@ -9,6 +10,7 @@ namespace JobTracker.ViewModel
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Mouse.Capture(null);
         }
         
     }

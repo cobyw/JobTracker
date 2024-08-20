@@ -27,6 +27,15 @@
         </Style>
     </Window.Resources>
 
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding Path=SaveCommand}" 
+                Key="S" 
+                Modifiers="Control"/>
+        <KeyBinding Command="{Binding Path=AddJobCommand}" 
+                Key="N" 
+                Modifiers="Control"/>
+    </Window.InputBindings>
+
     <Grid Background="HotPink">
         <Grid.RowDefinitions>
             <RowDefinition/>

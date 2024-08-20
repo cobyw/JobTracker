@@ -13,17 +13,6 @@ namespace JobTracker.View
             InitializeComponent();
             MainViewModel mainViewModel = new MainViewModel();
             DataContext = mainViewModel;
-
-            /*
-            jobList.SelectedIndex = 0;
-            UpdateCalendar();
-
-            saveCommand.InputGestures.Add(new KeyGesture(Key.S, ModifierKeys.Control));
-            CommandBindings.Add(new CommandBinding(saveCommand, BtnSave_Click));
-
-            newJobCommand.InputGestures.Add(new KeyGesture(Key.N, ModifierKeys.Control));
-            CommandBindings.Add(new CommandBinding(newJobCommand, BtnAddJob_Click));
-            */
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using JobTracker.Commands;
 using JobTracker.Model;
+using System.ComponentModel;
 
 namespace JobTracker.ViewModel
 {
@@ -83,11 +84,19 @@ namespace JobTracker.ViewModel
 
         public void RefreshJobs()
         {
+            foreach (JobViewModel job in _jobDatabase)
+            {
+                job.PropertyChanged -= OnJobViewModelPropertyChanged;
+            }
+
             _jobDatabase.Clear();
 
             foreach (Job job in JobManager.GetJobs())
             {
                 _jobDatabase.Add(new JobViewModel(job));
+
+                //subscribe to the most recent member of the list
+                _jobDatabase[^1].PropertyChanged += OnJobViewModelPropertyChanged;
             }
 
             Jobs = _jobDatabase;
@@ -154,36 +163,16 @@ namespace JobTracker.ViewModel
         }
         */
 
-        /// <summary>
-        /// Called when the user begins to select a date
-        /// Sets the default date to "now" so they see the current month
-        /// in the calendar.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DatePicker_GotFocus(object sender, RoutedEventArgs e)
+        private void OnJobViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (((DatePicker)sender).SelectedDate == DateTime.MinValue || ((DatePicker)sender).SelectedDate == null)
+            if (e.PropertyName == nameof(JobViewModel.DateLocated) ||
+                e.PropertyName == nameof(JobViewModel.DateApplied) ||
+                e.PropertyName == nameof(JobViewModel.DateMaterialsFinished) ||
+                e.PropertyName == nameof(JobViewModel.DateNextSteps))
             {
-                ((DatePicker)sender).SelectedDate = DateTime.Now;
+                OnPropertyChanged(nameof(DateViewModel));
             }
         }
 
-        /*
-        /// <summary>
-        /// Called whenever the user ticks or unticks any of the status checkboxes.
-        /// Ensures the title is up to date with the current combined status
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void statusCheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            UpdateCompoundTitle();
-        }
-        */
-
-        #region Helper Methods
-        
-        #endregion
     }
 }

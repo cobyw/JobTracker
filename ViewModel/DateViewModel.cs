@@ -76,7 +76,7 @@ namespace JobTracker.ViewModel
             {
                 if (changeData.ChangeDate.Date == _mainViewModel.SelectedDate?.Date)
                 {
-                    retVal += string.Format("\n{0} - {1}", changeData.ChangeJob,
+                    retVal += string.Format("\n{0} - {1} - {2}", changeData.Company, changeData.Job,
                         changeData.ChangeTypeString);
                     hasInfo = true;
                 }
@@ -103,22 +103,22 @@ namespace JobTracker.ViewModel
                 if (jobInfo.dateLocated != null)
                 {
                     _changeDatas.Add(new ChangeData(jobInfo.dateLocated ?? DateTime.MinValue,
-                        ChangeType.Located, jobInfo.jobTitle));
+                        ChangeType.Located, jobInfo.companyName, jobInfo.jobTitle));
                 }
                 if (jobInfo.dateMaterialsFinished != null)
                 {
                     _changeDatas.Add(new ChangeData(jobInfo.dateMaterialsFinished ?? DateTime.MinValue,
-                    ChangeType.MaterialsFinished, jobInfo.jobTitle));
+                    ChangeType.MaterialsFinished, jobInfo.companyName, jobInfo.jobTitle));
                 }
                 if (jobInfo.dateApplied != null)
                 {
                     _changeDatas.Add(new ChangeData(jobInfo.dateApplied ?? DateTime.MinValue,
-                    ChangeType.Applied, jobInfo.jobTitle));
+                    ChangeType.Applied, jobInfo.companyName, jobInfo.jobTitle));
                 }
                 if (jobInfo.dateNextSteps != null)
                 {
                     _changeDatas.Add(new ChangeData(jobInfo.dateNextSteps ?? DateTime.MinValue,
-                    ChangeType.NextSteps, jobInfo.jobTitle));
+                    ChangeType.NextSteps, jobInfo.companyName, jobInfo.jobTitle));
                 }
             }
         }
@@ -143,10 +143,11 @@ namespace JobTracker.ViewModel
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MainViewModel.SelectedDate) ||
-                e.PropertyName == nameof(MainViewModel.SelectedJob))
+                e.PropertyName == nameof(MainViewModel.SelectedJob)  ||
+                e.PropertyName == nameof(MainViewModel.DateViewModel))
             {
-                OnPropertyChanged(nameof(UpdatesOnDate));
                 OnPropertyChanged(nameof(DatesOfInterest));
+                OnPropertyChanged(nameof(UpdatesOnDate));
             }
         }
     }

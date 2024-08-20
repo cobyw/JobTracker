@@ -25,7 +25,15 @@ namespace JobTracker.Model
         /// <summary>
         /// The name of the job that was changed
         /// </summary>
-        public string ChangeJob
+        public string Job
+        {
+            get;
+        }
+
+        /// <summary>
+        /// The name of the job that was changed
+        /// </summary>
+        public string Company
         {
             get;
         }
@@ -40,11 +48,12 @@ namespace JobTracker.Model
             get => changeTypeDictionary[TypeOfChange];
         }
 
-        public ChangeData(DateTime changeDate, ChangeType typeOfChange, string changeJob)
+        public ChangeData(DateTime changeDate, ChangeType typeOfChange, string company, string job)
         {
             ChangeDate = changeDate;
             TypeOfChange = typeOfChange;
-            ChangeJob = changeJob;
+            Company = company;
+            Job = job;
         }
 
         /// <summary>

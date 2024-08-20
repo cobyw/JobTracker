@@ -86,26 +86,6 @@
             notes = string.Empty;
         }
 
-        /*
-        /// <summary>
-        /// Returns the compound title of the current job including the company name, job title
-        /// </summary>
-        /// <param name="jobInfo">The job title whose title is being requested</param>
-        /// <param name="includeStatus">Status is appended to the end of the title when true</param>
-        /// <returns></returns>
-        public string GetCompoundTitle(bool includeStatus = true)
-        {
-            if (includeStatus)
-            {
-                return string.Format("{0} - {1} - {2}", companyName, jobTitle, GetStatusString(Status));
-            }
-            else
-            {
-                return string.Format("{0} - {1}", companyName, jobTitle);
-            }
-        }
-        */
-
         public JobStatus Status
         {
             get

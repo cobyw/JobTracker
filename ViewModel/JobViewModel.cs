@@ -153,6 +153,7 @@ namespace JobTracker.ViewModel
             {
                 _job.pending = value;
                 OnPropertyChanged(nameof(Pending));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
@@ -166,6 +167,7 @@ namespace JobTracker.ViewModel
             {
                 _job.accepted = value;
                 OnPropertyChanged(nameof(Accepted));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 
@@ -179,6 +181,7 @@ namespace JobTracker.ViewModel
             {
                 _job.rejected = value;
                 OnPropertyChanged(nameof(Rejected));
+                OnPropertyChanged(nameof(CompoundTitle));
             }
         }
 

@@ -56,7 +56,7 @@
             </DockPanel>
 
             <Viewbox Grid.Row="1">
-                <Calendar SelectionMode="MultipleRange" CalendarDayButtonStyle="{DynamicResource CalendarDayButtonStyle}" SelectedDate="{Binding SelectedDate}"/>
+                <Calendar CalendarDayButtonStyle="{DynamicResource CalendarDayButtonStyle}" SelectedDate="{Binding SelectedDate}"/>
             </Viewbox>
             <!-- Calendar Display Information -->
             <DockPanel Grid.Row="2" DataContext="{Binding DateViewModel}">

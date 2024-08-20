@@ -3,6 +3,7 @@
     [Serializable]
     public class Job
     {
+        //these both include a hidden character so the box doesn't wipe if users type the const manually
         public const string c_JOBTITLE = "Job‎";
         public const string c_COMPANY = "Company‎";
 

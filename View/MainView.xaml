@@ -4,17 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         x:Class="JobTracker.View.MainView"
+        xmlns:tools="clr-namespace:JobTracker.Utilities"
         mc:Ignorable="d"
         Title="Job Tracker" Height="550" Width="800" MinHeight="550" MinWidth="600">
         <!--Closing="Window_Closing"-->
+
     <Window.Resources>
+        <tools:LookupConverter x:Key="LookupConverter"/>
+        
         <Style x:Key="CalendarDayButtonStyle" TargetType="CalendarDayButton">
             <Style.Triggers>
                 <DataTrigger Value="True">
                     <DataTrigger.Binding>
                         <MultiBinding Converter="{StaticResource LookupConverter}">
                             <Binding />
-                            <Binding Path="DataContext.Dates" RelativeSource="{RelativeSource AncestorType=Calendar}" />
+                            <Binding Path="DataContext.DateViewModel.DatesOfInterest" RelativeSource="{RelativeSource AncestorType=Calendar}" />
                         </MultiBinding>
                     </DataTrigger.Binding>
                     <Setter Property="Background" Value="Pink" />

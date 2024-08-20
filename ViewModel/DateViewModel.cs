@@ -146,6 +146,7 @@ namespace JobTracker.ViewModel
                 e.PropertyName == nameof(MainViewModel.SelectedJob))
             {
                 OnPropertyChanged(nameof(UpdatesOnDate));
+                OnPropertyChanged(nameof(DatesOfInterest));
             }
         }
     }

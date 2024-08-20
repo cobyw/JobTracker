@@ -63,6 +63,7 @@ namespace JobTracker.ViewModel
 		public ICommand	LoadCommand { get;}
 		public ICommand	AddJobCommand { get; }
 		public ICommand	RemoveJobCommand { get; }
+		public ICommand	CloseCommand { get; }
 
 		public MainViewModel()
 		{
@@ -80,6 +81,7 @@ namespace JobTracker.ViewModel
             LoadCommand = new LoadCommand(this);
             AddJobCommand = new AddJobCommand(this);
 			RemoveJobCommand = new RemoveJobCommand(this);
+            CloseCommand = new CloseCommand(this);
 		}
 
         public void RefreshJobs()
@@ -118,7 +120,7 @@ namespace JobTracker.ViewModel
         }
 
 
-        private const float c_TIMEBETWEENSAVEREMINDERS = 15f;
+        public const double c_TIMEBETWEENSAVEREMINDERS = 15f;
 
         private DateTime _lastSaveTime = DateTime.MinValue;
         public DateTime LastSaveTime
@@ -132,36 +134,6 @@ namespace JobTracker.ViewModel
                 _lastSaveTime = value;
             }
         }
-
-        /*
-        /// <summary>
-        /// Encourages the user to save if they have not done so recently
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            var timeSinceSave = DateTime.Now.Subtract(_lastSaveTime).TotalSeconds;
-            if (timeSinceSave > c_TIMEBETWEENSAVEREMINDERS)
-            {
-                string warningMessage;
-
-                if (timeSinceSave > 60)
-                {
-                    warningMessage = "You haven't saved in over a minute. Are you sure you want to quit without saving?";
-                }
-                else
-                {
-                    warningMessage = string.Format("You haven't saved in {0} seconds. Are you sure you want to quit without saving?", (int)timeSinceSave);
-                }
-
-                if (MessageBox.Show(string.Format(warningMessage, timeSinceSave), "Warning - You haven't saved", MessageBoxButton.YesNo) == MessageBoxResult.No)
-                {
-                    e.Cancel = true;
-                }
-            }
-        }
-        */
 
         private void OnJobViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {

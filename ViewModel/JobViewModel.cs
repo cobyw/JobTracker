@@ -22,11 +22,11 @@ namespace JobTracker.ViewModel
     {
         get
         {
-            return _job.companyName;
+                return _job.companyName != c_COMPANY ? _job.companyName : string.Empty;
         }
         set
         {
-                _job.companyName = value;
+                _job.companyName = value != string.Empty? value : c_COMPANY;
                 OnPropertyChanged(nameof(CompanyName));
                 OnPropertyChanged(nameof(CompoundTitle));
             }
@@ -36,11 +36,11 @@ namespace JobTracker.ViewModel
         {
             get
             {
-                return _job.jobTitle;
+                return _job.jobTitle != c_JOBTITLE ? _job.jobTitle : string.Empty;
             }
             set
             {
-                _job.jobTitle = value;
+                _job.jobTitle = value != string.Empty ? value : c_JOBTITLE;
                 OnPropertyChanged(nameof(JobTitle));
                 OnPropertyChanged(nameof(CompoundTitle));
             }

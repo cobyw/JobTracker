@@ -3,8 +3,8 @@
     [Serializable]
     public class Job
     {
-        public const string c_JOBTITLE = "Job";
-        public const string c_COMPANY = "Company";
+        public const string c_JOBTITLE = "Job‎";
+        public const string c_COMPANY = "Company‎";
 
         public enum JobStatus
         { 

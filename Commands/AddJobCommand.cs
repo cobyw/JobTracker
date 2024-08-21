@@ -3,6 +3,9 @@ using JobTracker.ViewModel;
 
 namespace JobTracker.Commands
 {
+    /// <summary>
+    /// Adds a new default job, refreshes the Job database, and selects the new job.
+    /// </summary>
     public class AddJobCommand : CommandBase
     {
         private readonly MainViewModel _mainViewModel;

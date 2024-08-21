@@ -8,6 +8,9 @@ using static JobTracker.Model.ChangeData;
 
 namespace JobTracker.ViewModel
 {
+    /// <summary>
+    /// ViewModel that controls the calendar and date info window
+    /// </summary>
     public class DateViewModel : ViewModelBase
     {
         private readonly MainViewModel _mainViewModel;

@@ -5,19 +5,14 @@ namespace JobTracker.ViewModel
 {
     public class JobViewModel : ViewModelBase
     {
+        private readonly Job _job;
 
         public JobViewModel(Job job) {
             _job = job;
         }
 
-        private readonly Job _job;
-
-        public string CompoundTitle
-        {
-            get => string.Format("{0} - {1} - {2}", _job.companyName, _job.jobTitle, GetStatusString(_job.Status));
-        }
-
-    //properties
+        #region properties
+        //properties
         public string CompanyName
     {
         get
@@ -261,6 +256,12 @@ namespace JobTracker.ViewModel
                 _job.notes = value;
                 OnPropertyChanged(nameof(Notes));
             }
+        }
+        #endregion
+
+        public string CompoundTitle
+        {
+            get => string.Format("{0} - {1} - {2}", _job.companyName, _job.jobTitle, GetStatusString(_job.Status));
         }
     }
 }

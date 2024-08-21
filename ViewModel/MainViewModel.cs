@@ -8,14 +8,19 @@ using System.ComponentModel;
 
 namespace JobTracker.ViewModel
 {
+    /// <summary>
+    /// View Model that controls the main view at a high level.
+    /// MainViewModel holds both the DateViewModel and any JobViewModels
+    /// </summary>
     public class MainViewModel : ViewModelBase
 	{
+        public const double c_TIMEBETWEENSAVEREMINDERS = 15f;
 
         private ObservableCollection<JobViewModel> _jobDatabase = new ObservableCollection<JobViewModel>();
 
         public IEnumerable<JobViewModel> Jobs { get; set; }
 
-
+        #region property notifiers
         private JobViewModel _selectedJob;
         public JobViewModel SelectedJob
         {
@@ -58,14 +63,42 @@ namespace JobTracker.ViewModel
             }
         }
 
-        //commands
+        private int _currentSelectionIndex;
+        public int CurrentSelectionIndex
+        {
+            get
+            {
+                return _currentSelectionIndex;
+            }
+            set
+            {
+                _currentSelectionIndex = value;
+                OnPropertyChanged(nameof(CurrentSelectionIndex));
+            }
+        }
+
+        private DateTime _lastSaveTime = DateTime.MinValue;
+        public DateTime LastSaveTime
+        {
+            get
+            {
+                return _lastSaveTime;
+            }
+            set
+            {
+                _lastSaveTime = value;
+            }
+        }
+        #endregion
+
+        #region commands
         public ICommand	SaveCommand { get; }
 		public ICommand	LoadCommand { get;}
 		public ICommand	AddJobCommand { get; }
 		public ICommand	RemoveJobCommand { get; }
 		public ICommand	CloseCommand { get; }
-
-		public MainViewModel()
+        #endregion
+        public MainViewModel()
 		{
             if (JobManager.JobCount() == 0)
             {
@@ -84,6 +117,10 @@ namespace JobTracker.ViewModel
             CloseCommand = new CloseCommand(this);
 		}
 
+        /// <summary>
+        /// Clears out and recreates the _jobDatabase based on the stored JobManager.
+        /// Also unsubscribes and resubscribes to jobs to prevent memory leaks
+        /// </summary>
         public void RefreshJobs()
         {
             foreach (JobViewModel job in _jobDatabase)
@@ -104,37 +141,11 @@ namespace JobTracker.ViewModel
             Jobs = _jobDatabase;
         }
 
-        //old stuff
-        private int _currentSelectionIndex;
-        public int CurrentSelectionIndex
-        {
-            get
-            {
-                return _currentSelectionIndex;
-            }
-            set
-            {
-                _currentSelectionIndex = value;
-                OnPropertyChanged(nameof(CurrentSelectionIndex));
-            }
-        }
-
-
-        public const double c_TIMEBETWEENSAVEREMINDERS = 15f;
-
-        private DateTime _lastSaveTime = DateTime.MinValue;
-        public DateTime LastSaveTime
-        {
-            get
-            {
-                return _lastSaveTime;
-            }
-            set
-            {
-                _lastSaveTime = value;
-            }
-        }
-
+        /// <summary>
+        /// Updates the DateViewModel when any of the date fields change in the _jobDatabase
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnJobViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(JobViewModel.DateLocated) ||
@@ -145,6 +156,5 @@ namespace JobTracker.ViewModel
                 OnPropertyChanged(nameof(DateViewModel));
             }
         }
-
     }
 }

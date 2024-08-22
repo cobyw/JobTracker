@@ -111,7 +111,7 @@ namespace JobTracker.ViewModel
             SelectedDate = DateTime.Now;
 
             SaveCommand = new SaveCommand(this);
-            LoadCommand = new LoadCommand(this);
+            LoadCommand = new LoadCommand(this, Job.c_RENAMEDICTIONARY);
             AddJobCommand = new AddJobCommand(this);
 			RemoveJobCommand = new RemoveJobCommand(this);
             CloseCommand = new CloseCommand(this);

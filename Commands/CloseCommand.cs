@@ -37,7 +37,7 @@ namespace JobTracker.Commands
                 if (MessageBox.Show(string.Format(warningMessage, timeSinceSave), "Warning - You haven't saved", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     var tryingToSave = true;
-                    while (tryingToSave)
+                    while (tryingToSave && timeSinceSave > MainViewModel.c_TIMEBETWEENSAVEREMINDERS)
                     {
                         _mainViewModel.SaveCommand.Execute(this);
                         if (timeSinceSave > MainViewModel.c_TIMEBETWEENSAVEREMINDERS)

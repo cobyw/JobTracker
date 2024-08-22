@@ -7,6 +7,14 @@
         public const string c_JOBTITLE = "Job‎";
         public const string c_COMPANY = "Company‎";
 
+        /// <summary>
+        /// Used to update save files when names of variables or classes change
+        /// </summary>
+        public static Dictionary<string, string> c_RENAMEDICTIONARY = new Dictionary<string, string>()
+        {
+            {"JobInfo", "Job"},//Changed during the 1.2 update 
+        };
+
         public enum JobStatus
         { 
             Empty, //0
